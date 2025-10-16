@@ -6,8 +6,6 @@
   <title>College Tennis Roadmap</title>
   <meta name="description" content="An interactive, personalized roadmap to guide junior players toward college tennis — metrics, timeline, recruiting milestones, and parent tools." />
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Resilient Chart.js loader -->
   <script>
     (function () {
       const CDNS = [
@@ -32,24 +30,18 @@
       };
     })();
   </script>
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
   <style>
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica Neue,Arial;background:#1C1917;color:#F5F5F4;overflow-x:hidden}
     #page-wrapper{transition:transform .3s ease-in-out}
     #page-wrapper.menu-open{transform:translateX(-80%)}
-
     .nav-link.active{color:#38BDF8;border-bottom:2px solid #38BDF8}
-
     .chart-container{position:relative;width:100%;max-width:900px;margin-left:auto;margin-right:auto;height:300px}
     @media (min-width:768px){.chart-container{height:400px}}
-
     .accordion-content{max-height:0;overflow:hidden;transition:max-height .45s ease,opacity .25s ease;opacity:0}
     .accordion-content.open{opacity:1}
-
     .timeline-line{left:50%}
     .left-timeline{flex-direction:row-reverse}
     .right-timeline{flex-direction:row}
@@ -60,26 +52,17 @@
       .left-timeline>div:nth-child(2),.right-timeline>div:nth-child(2){margin-left:0;margin-right:0;position:absolute;left:0}
       .left-timeline>div:last-child,.right-timeline>div:last-child{width:calc(100% - 60px);margin-left:60px}
     }
-
     #mobile-menu-overlay{position:fixed;top:0;right:0;width:80%;max-width:320px;height:100%;background:#292524;z-index:1000;transform:translateX(100%);transition:transform .28s ease-in-out;box-shadow:-5px 0 20px rgba(0,0,0,.45);display:flex;flex-direction:column;padding-top:4rem}
     #mobile-menu-overlay.open{transform:translateX(0)}
     #mobile-menu-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;display:none}
     #mobile-menu-backdrop.open{display:block}
     body.no-scroll{overflow:hidden}
-
     .print-toolbar{position:fixed;right:16px;bottom:16px;z-index:60}
     .print-toolbar button{box-shadow:0 6px 18px rgba(0,0,0,.35)}
-
     .no-print{display:block}
     .print-only{display:none}
-
-    /* Accessibility helper if Tailwind's sr-only isn't available at runtime */
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-
-    @media (prefers-reduced-motion: reduce) {
-      * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-    }
-
+    @media (prefers-reduced-motion: reduce) {* { animation: none !important; transition: none !important; scroll-behavior: auto !important; }}
     @media print {
       html,body{background:#fff !important;color:#000 !important}
       .bg-stone-800,.bg-stone-900,.bg-stone-700{background:#fff !important}
@@ -91,27 +74,19 @@
       .no-print,header,.print-toolbar,#mobile-menu-overlay,#mobile-menu-backdrop{display:none !important}
       main.container,.container{max-width:100% !important;padding:0 12mm !important}
       a[href]:after{content:'' !important}
-
-      /* Limit print to Next Actions + Milestones when print-limited is set */
-      body.print-limited section:not(#next-actions):not(#milestones){
-        display:none !important;
-      }
+      body.print-limited section:not(#next-actions):not(#milestones){display:none !important;}
       #next-actions, #milestones { page-break-inside: avoid; }
     }
   </style>
 </head>
 <body class="antialiased">
-  <a href="#intro" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:bg-sky-600 focus:text-white focus:px-3 focus:py-2 focus:rounded">
-    Skip to content
-  </a>
-
+  <a href="#intro" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:bg-sky-600 focus:text-white focus:px-3 focus:py-2 focus:rounded">Skip to content</a>
   <div id="page-wrapper">
-    <!-- Header -->
     <header class="bg-stone-800/90 backdrop-blur-lg sticky top-0 z-50 shadow-sm no-print">
       <nav class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-center mb-3">
           <span class="text-4xl mr-3" role="img" aria-label="Tennis Ball">🎾</span>
-          <h1 id="site-title" class="text-2xl md:text-3xl font-bold">John Hampton's College Tennis Roadmap</h1>
+          <h1 id="site-title" class="text-2xl md:text-3xl font-bold">College Tennis Roadmap</h1>
         </div>
         <div class="hidden md:flex items-center justify-center flex-wrap gap-x-6 gap-y-2" role="navigation" aria-label="Main navigation">
           <a href="#vision" class="nav-link text-stone-300 hover:text-sky-400 font-medium pb-1">The Vision</a>
@@ -135,41 +110,31 @@
         </div>
       </nav>
     </header>
-
-    <!-- Print toolbar -->
     <div class="print-toolbar no-print">
       <div class="flex flex-col gap-2">
         <button id="btn-print-all" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-2 rounded">Print Page (PDF)</button>
         <button id="btn-print-cc" class="bg-stone-700 hover:bg-stone-600 text-white px-4 py-2 rounded">Print Checklists + Calendar</button>
       </div>
     </div>
-
-    <!-- Main -->
     <main class="container mx-auto p-4 md:p-8">
-      <!-- Intro + Personalization -->
       <section id="intro" class="text-center mb-16">
         <h2 class="text-4xl md:text-5xl font-extrabold mb-4" id="intro-title">The Pathway to Collegiate Tennis</h2>
         <p class="max-w-3xl mx-auto text-lg text-stone-300">
-          A comprehensive, year-by-year guide to prepare <span id="player-fullname">John Kylan Hampton</span> for college tennis — athletic development, academics, and recruitment strategy.
+          A comprehensive, year-by-year guide to prepare a junior player for college tennis — athletic development, academics, and recruitment strategy.
         </p>
-
-        <!-- Personalization Box -->
         <div class="mt-6 max-w-4xl mx-auto bg-stone-800/70 rounded-xl p-4 md:p-5 shadow-md">
           <form id="profile-form" class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
             <div class="md:col-span-4 text-left">
               <label for="inp-name" class="block text-sm text-stone-300 mb-1">Player Name</label>
-              <input id="inp-name" type="text" placeholder="e.g., Alex Morgan"
-                     class="w-full px-3 py-2 rounded bg-stone-900 text-stone-100 border border-stone-700 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+              <input id="inp-name" type="text" placeholder="e.g., Alex Morgan" class="w-full px-3 py-2 rounded bg-stone-900 text-stone-100 border border-stone-700 focus:outline-none focus:ring-2 focus:ring-sky-500" />
             </div>
             <div class="md:col-span-4 text-left">
               <label for="inp-dob" class="block text-sm text-stone-300 mb-1">Date of Birth (YYYY-MM-DD)</label>
-              <input id="inp-dob" type="text" placeholder="e.g., 2012-01-13"
-                     class="w-full px-3 py-2 rounded bg-stone-900 text-stone-100 border border-stone-700 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+              <input id="inp-dob" type="text" placeholder="e.g., 2012-01-13" class="w-full px-3 py-2 rounded bg-stone-900 text-stone-100 border border-stone-700 focus:outline-none focus:ring-2 focus:ring-sky-500" />
             </div>
             <div class="md:col-span-3 text-left">
               <label for="inp-utr" class="block text-sm text-stone-300 mb-1">Current UTR (optional)</label>
-              <input id="inp-utr" type="number" step="0.1" min="0" max="16" placeholder="e.g., 4.0"
-                     class="w-full px-3 py-2 rounded bg-stone-900 text-stone-100 border border-stone-700 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+              <input id="inp-utr" type="number" step="0.1" min="0" max="16" placeholder="e.g., 4.0" class="w-full px-3 py-2 rounded bg-stone-900 text-stone-100 border border-stone-700 focus:outline-none focus:ring-2 focus:ring-sky-500" />
             </div>
             <div class="md:col-span-1 flex gap-2">
               <button id="btn-generate" type="submit" class="flex-1 bg-sky-600 hover:bg-sky-500 text-white px-3 py-2 rounded">Generate</button>
@@ -180,25 +145,10 @@
             <button id="btn-reset" class="ml-2 text-rose-400 hover:underline">Reset Roadmap</button>
           </div>
         </div>
-
-        <!-- Audio/Video buttons -->
         <div class="mt-6 flex justify-center gap-3 flex-wrap">
-          <a
-            href="https://notebooklm.google.com/notebook/d50a0031-7f1b-48bb-b299-25a7082b4143?artifactId=3a67242a-aa48-4214-be73-0b520b6895e4"
-            target="_blank" rel="noopener"
-            title="An audio summary of this college tennis roadmap"
-            class="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white px-5 py-2 rounded-lg shadow transition"
-          >🎧 <span>Listen to Audio Overview</span></a>
-
-          <a
-            href="https://notebooklm.google.com/notebook/d50a0031-7f1b-48bb-b299-25a7082b4143?artifactId=8155dc5b-6e22-47ee-b840-48edb39e82a1"
-            target="_blank" rel="noopener"
-            title="Watch a visual walkthrough of this roadmap"
-            class="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-400 text-white px-5 py-2 rounded-lg shadow transition"
-          >🎥 <span>Watch Video Overview</span></a>
+          <a href="https://notebooklm.google.com/notebook/d50a0031-7f1b-48bb-b299-25a7082b4143?artifactId=3a67242a-aa48-4214-be73-0b520b6895e4" target="_blank" rel="noopener" title="An audio summary of this college tennis roadmap" class="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white px-5 py-2 rounded-lg shadow transition">🎧 <span>Listen to Audio Overview</span></a>
+          <a href="https://notebooklm.google.com/notebook/d50a0031-7f1b-48bb-b299-25a7082b4143?artifactId=8155dc5b-6e22-47ee-b840-48edb39e82a1" target="_blank" rel="noopener" title="Watch a visual walkthrough of this roadmap" class="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-400 text-white px-5 py-2 rounded-lg shadow transition">🎥 <span>Watch Video Overview</span></a>
         </div>
-
-        <!-- Stats -->
         <div class="mt-8 flex justify-center items-center space-x-8">
           <div class="text-center">
             <p id="john-age" class="text-3xl font-bold text-sky-400">—</p>
@@ -210,12 +160,9 @@
           </div>
         </div>
       </section>
-
-      <!-- Vision -->
       <section id="vision" class="mb-16 scroll-mt-20">
         <h3 class="text-3xl font-bold text-center mb-2">The Vision: What Coaches Look For</h3>
         <p class="text-center text-stone-300 mb-8 max-w-2xl mx-auto">College coaches seek well-rounded student-athletes. Success in recruitment goes beyond rankings to include academics, character, and demonstrated potential.</p>
-
         <div id="accordion-container" class="max-w-3xl mx-auto space-y-4">
           <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
             <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg" aria-expanded="false" aria-controls="acc-athletic" id="acc-athletic-btn">
@@ -233,7 +180,6 @@
               </div>
             </div>
           </div>
-
           <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
             <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg" aria-expanded="false" aria-controls="acc-academic" id="acc-academic-btn">
               <span>Academic Excellence</span><span class="acc-icon transform transition-transform">▼</span>
@@ -249,7 +195,6 @@
               </div>
             </div>
           </div>
-
           <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
             <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg" aria-expanded="false" aria-controls="acc-character" id="acc-character-btn">
               <span>Character & Intangibles</span><span class="acc-icon transform transition-transform">▼</span>
@@ -268,27 +213,21 @@
           </div>
         </div>
       </section>
-
-      <!-- Next Actions -->
       <section id="next-actions" class="mb-16 scroll-mt-20">
         <h3 class="text-3xl font-bold text-center mb-2">Next Actions (This Month)</h3>
         <p class="text-center text-stone-300 mb-8 max-w-2xl mx-auto">Quick, high-impact tasks generated from the player’s current age. These refresh automatically based on date of birth.</p>
         <div class="max-w-3xl mx-auto bg-stone-800 p-6 rounded-lg shadow-md">
           <ul id="next-actions-list" class="list-disc list-inside space-y-2 text-stone-300"></ul>
-          <p class="text-xs text-stone-400 mt-4">Tip: Review with coaches to align training and competition calendars.</p>
+          <p id="next-actions-hint" class="text-xs text-stone-400 mt-4"></p>
         </div>
       </section>
-
-      <!-- Metrics -->
       <section id="metrics" class="mb-16 scroll-mt-20">
         <h3 class="text-3xl font-bold text-center mb-2">The Metrics: UTR Targets by Year</h3>
         <p class="text-center text-stone-300 mb-8 max-w-2xl mx-auto">The chart shows the target range by the end of each high-school year, matching the pathway below.</p>
-
         <div class="bg-stone-800 p-4 md:p-8 rounded-xl shadow-lg">
           <div class="chart-container">
             <canvas id="utrChart" role="img" aria-label="UTR progression chart"></canvas>
           </div>
-
           <div id="chart-fallback" class="mt-4 text-stone-300 text-sm hidden">
             <div class="bg-stone-900 rounded p-4">
               <p class="mb-2"><strong>Chart unavailable.</strong> Target UTR range by year:</p>
@@ -302,7 +241,6 @@
             </div>
           </div>
         </div>
-
         <div class="mt-8 overflow-x-auto">
           <table class="min-w-full bg-stone-800 rounded-lg shadow-md">
             <thead class="bg-stone-700">
@@ -337,14 +275,10 @@
           </table>
         </div>
       </section>
-
-      <!-- Pathway -->
       <section id="pathway" class="mb-16 scroll-mt-20">
         <h3 class="text-3xl font-bold text-center mb-8">The Pathway: Year-by-Year Progression</h3>
         <div class="relative wrap overflow-hidden p-4 md:p-10">
           <div class="timeline-line absolute border-opacity-20 border-stone-600 h-full border" style="left:50%"></div>
-
-          <!-- Freshman -->
           <div id="freshman" class="mb-8 flex justify-between items-center w-full right-timeline">
             <div class="order-1 w-5/12 md:block hidden"></div>
             <div class="z-20 flex items-center order-1 bg-sky-500 shadow-xl w-12 h-12 rounded-full" aria-hidden="true">
@@ -362,8 +296,6 @@
               </ul>
             </div>
           </div>
-
-          <!-- Sophomore -->
           <div id="sophomore" class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
             <div class="order-1 w-5/12 md:block hidden"></div>
             <div class="z-20 flex items-center order-1 bg-sky-500 shadow-xl w-12 h-12 rounded-full" aria-hidden="true">
@@ -381,8 +313,6 @@
               </ul>
             </div>
           </div>
-
-          <!-- Junior -->
           <div id="junior" class="mb-8 flex justify-between items-center w-full right-timeline">
             <div class="order-1 w-5/12 md:block hidden"></div>
             <div class="z-20 flex items-center order-1 bg-sky-500 shadow-xl w-12 h-12 rounded-full" aria-hidden="true">
@@ -400,8 +330,6 @@
               </ul>
             </div>
           </div>
-
-          <!-- Senior -->
           <div id="senior" class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
             <div class="order-1 w-5/12 md:block hidden"></div>
             <div class="z-20 flex items-center order-1 bg-sky-500 shadow-xl w-12 h-12 rounded-full" aria-hidden="true">
@@ -420,12 +348,9 @@
           </div>
         </div>
       </section>
-
-      <!-- Milestones -->
       <section id="milestones" class="mb-16 scroll-mt-20">
         <h3 class="text-3xl font-bold text-center mb-2">Recruitment and Eligibility Milestones</h3>
         <p class="text-center text-stone-300 mb-8 max-w-2xl mx-auto">When to engage with key organizations and rules for eligibility.</p>
-
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div class="bg-stone-800 p-6 rounded-lg shadow-md">
             <h4 class="font-bold text-xl mb-2">NCAA Eligibility Center</h4>
@@ -440,7 +365,6 @@
               </li>
             </ul>
           </div>
-
           <div class="bg-stone-800 p-6 rounded-lg shadow-md">
             <h4 class="font-bold text-xl mb-2">NAIA Eligibility Center</h4>
             <p class="text-stone-300 mb-4">Determines eligibility for NAIA schools.</p>
@@ -453,7 +377,6 @@
               </li>
             </ul>
           </div>
-
           <div class="bg-stone-800 p-6 rounded-lg shadow-md">
             <h4 class="font-bold text-xl mb-2">UTR Sports & TennisRecruiting.net</h4>
             <p class="text-stone-300 mb-4">Core platforms for objective data and coach visibility.</p>
@@ -469,8 +392,6 @@
           </div>
         </div>
       </section>
-
-      <!-- Strategy -->
       <section id="strategy" class="mb-16 scroll-mt-20">
         <h3 class="text-3xl font-bold text-center mb-2">Match Strategy Examples</h3>
         <div class="bg-stone-800 p-6 rounded-lg shadow-md max-w-2xl mx-auto space-y-6">
@@ -488,8 +409,6 @@
           </div>
         </div>
       </section>
-
-      <!-- Recruitment Email -->
       <section id="recruitment-email" class="mb-16 scroll-mt-20">
         <h3 class="text-3xl font-bold text-center mb-2">Recruitment Email Template</h3>
         <div class="bg-stone-800 p-6 rounded-lg shadow-md max-w-2xl mx-auto">
@@ -519,8 +438,6 @@ Sincerely,
           </div>
         </div>
       </section>
-
-      <!-- SWOT -->
       <section id="swot-analysis" class="mb-16 scroll-mt-20">
         <h3 class="text-3xl font-bold text-center mb-2">Example SWOT Analysis</h3>
         <div class="bg-stone-800 p-6 rounded-lg shadow-md max-w-2xl mx-auto">
@@ -541,10 +458,10 @@ Sincerely,
           </ul>
           <h4 class="font-bold text-xl mb-2">Opportunities</h4>
           <ul class="list-disc list-inside text-stone-300 mb-4 space-y-1">
-            <li><strong>Doubles Development:</strong> Higher doubles UTR leverage.</li>
-            <li><strong>Mental Training:</strong> Routine to handle pressure.</li>
-            <li><strong>Coaching:</strong> Leverage Lawrence & Ross for growth.</li>
-            <li><strong>Match Volume:</strong> Smart tournament selection.</li>
+            <li><strong>Doubles Development:</strong> Build on strengths in doubles; seek consistent partnership and targeted doubles events.</li>
+            <li><strong>Mental Training:</strong> Add routines for pressure moments (breathing, reset rituals, between-point process).</li>
+            <li><strong>Coaching Collaboration:</strong> Work with your current coaching team to set quarterly goals, review match video, and plan tournaments.</li>
+            <li><strong>Match Volume:</strong> Use smart tournament selection (UTR-verified + USTA levels) to steadily raise rating and confidence.</li>
           </ul>
           <h4 class="font-bold text-xl mb-2">Threats</h4>
           <ul class="list-disc list-inside text-stone-300 space-y-1">
@@ -554,12 +471,9 @@ Sincerely,
           </ul>
         </div>
       </section>
-
-      <!-- Glossary -->
       <section id="glossary" class="mb-16 scroll-mt-20">
         <h3 class="text-3xl font-bold text-center mb-2">Glossary (Quick Reference)</h3>
         <p class="text-center text-stone-300 mb-8 max-w-2xl mx-auto">Short definitions for terms parents will see during the recruiting journey.</p>
-
         <div class="max-w-3xl mx-auto space-y-4">
           <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
             <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg">
@@ -571,7 +485,6 @@ Sincerely,
               </div>
             </div>
           </div>
-
           <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
             <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg">
               <span>TRN (TennisRecruiting.net)</span><span class="acc-icon transform transition-transform">▼</span>
@@ -582,7 +495,6 @@ Sincerely,
               </div>
             </div>
           </div>
-
           <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
             <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg">
               <span>NCAA Eligibility Center</span><span class="acc-icon transform transition-transform">▼</span>
@@ -593,7 +505,6 @@ Sincerely,
               </div>
             </div>
           </div>
-
           <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
             <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg">
               <span>NLI (National Letter of Intent)</span><span class="acc-icon transform transition-transform">▼</span>
@@ -604,7 +515,6 @@ Sincerely,
               </div>
             </div>
           </div>
-
           <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
             <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg">
               <span>Contact Periods (Dead/Quiet/Evaluation)</span><span class="acc-icon transform transition-transform">▼</span>
@@ -617,8 +527,6 @@ Sincerely,
           </div>
         </div>
       </section>
-
-      <!-- Resources -->
       <section id="resources" class="mb-16 scroll-mt-20">
         <h3 class="text-3xl font-bold text-center mb-8">Resources and Links</h3>
         <div class="bg-stone-800 p-6 rounded-lg shadow-md max-w-3xl mx-auto">
@@ -632,8 +540,6 @@ Sincerely,
           </ul>
         </div>
       </section>
-
-      <!-- Finances -->
       <section id="finances" class="mb-16 scroll-mt-20">
         <h3 class="text-3xl font-bold text-center mb-8">The Finances: Scholarship Opportunities</h3>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -652,19 +558,15 @@ Sincerely,
         </div>
       </section>
     </main>
-
-    <!-- Footer -->
     <footer class="bg-stone-900 text-white mt-16 no-print">
       <div class="container mx-auto p-8 text-center text-sm">
         <p class="mb-1 text-stone-400">&copy; 2025 College Tennis Roadmap. All rights reserved.</p>
-        <p class="mb-1 text-stone-400">Prepared by: Herman Lawrence, <a href="mailto:hlawrence112@gmail.com" class="text-sky-400 hover:underline">hlawrence112@gmail.com</a></p>
+        <p class="mb-1 text-stone-400">Prepared by: <a href="mailto:hlawrence112@gmail.com" class="text-sky-400 hover:underline">hlawrence112@gmail.com</a></p>
         <p class="mb-1 text-stone-400">Last Updated: July 31, 2025</p>
         <p class="text-stone-400">Disclaimer: This roadmap is a guide and does not guarantee specific outcomes or scholarship offers.</p>
       </div>
     </footer>
   </div>
-
-  <!-- Mobile menu -->
   <div id="mobile-menu-backdrop" class="no-print"></div>
   <nav id="mobile-menu-overlay" aria-hidden="true" aria-label="Mobile menu" class="no-print">
     <button id="close-mobile-menu" class="absolute top-4 right-4 text-white hover:text-sky-300 focus:outline-none" aria-label="Close menu">
@@ -686,63 +588,20 @@ Sincerely,
       <a href="#finances" class="mobile-nav-link text-stone-100 text-xl font-medium">The Finances</a>
     </div>
   </nav>
-
-  <!-- Scripts -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      /* ===== Defaults ===== */
-      const DEFAULT_PROFILE = {
-        name: "John Hampton",
-        fullname: "John Kylan Hampton",
-        dob: "2012-01-13",
-        utr: "" // empty shows "3.xx"
-      };
-
-      /* ===== Targets ===== */
-      const TARGETS = {
-        freshman:  { min: 4.0,  max: 4.5 },
-        sophomore: { min: 5.5,  max: 7.0 },
-        junior:    { min: 8.0,  max: 10.0 },
-        senior:    { min: 9.5,  max: 12.5 }
-      };
+      const DEFAULT_PROFILE = { name: "", fullname: "", dob: "", utr: "" };
+      const TARGETS = { freshman:{min:4.0,max:4.5}, sophomore:{min:5.5,max:7.0}, junior:{min:8.0,max:10.0}, senior:{min:9.5,max:12.5} };
       const mid = (v) => (v.min + v.max) / 2;
-
-      /* ===== Next Actions by age ===== */
       const NEXT_ACTIONS = {
-        13: [
-          "Create/complete UTR and TRN profiles with a current photo.",
-          "Enter UTR-verified matches; target 2–3 competitive events this quarter.",
-          "Weekly serve practice: 2 focused sessions on toss, spin, and targets.",
-          "Set up a 30-sec highlight clip (phone is fine) to start a reel."
-        ],
-        14: [
-          "Book USTA L6/L5 events for the next 8–10 weeks (mix singles/doubles).",
-          "Baseline patterns: cross-court heavy topspin, add slice variation.",
-          "Start light SAT/ACT exposure (vocab/math drills 10–15 min/day).",
-          "Log match notes after each event (3 strengths, 1 focus area)."
-        ],
-        15: [
-          "Assemble a 90-sec highlight video (serve + 2 best patterns).",
-          "Begin college list (10–15 schools: D1/D2/D3 mix) with coach input.",
-          "Strength/conditioning 2–3×/week; track sprint and agility baselines.",
-          "Plan 1 campus visit (unofficial) if feasible."
-        ],
-        16: [
-          "Email 5–8 coaches monthly with results + next tournaments.",
-          "Register NCAA/NAIA eligibility centers and send test scores if applicable.",
-          "Play at least one higher-level draw (UTR event or USTA L4/L3).",
-          "Schedule 1–2 coach calls; prepare 3 thoughtful questions per school."
-        ],
-        17: [
-          "Confirm core courses and GPA for eligibility; finalize test plans.",
-          "Narrow college list to 5–7; schedule official/unofficial visits.",
-          "Update video with recent clips; share before visit weekends.",
-          "Prepare for NLI timeline (if applicable) and scholarship discussions."
-        ]
+        13:["Create/complete UTR and TRN profiles with a current photo.","Enter UTR-verified matches; target 2–3 competitive events this quarter.","Weekly serve practice: 2 focused sessions on toss, spin, and targets.","Set up a 30-sec highlight clip (phone is fine) to start a reel."],
+        14:["Book USTA L6/L5 events for the next 8–10 weeks (mix singles/doubles).","Baseline patterns: cross-court heavy topspin, add slice variation.","Start light SAT/ACT exposure (vocab/math drills 10–15 min/day).","Log match notes after each event (3 strengths, 1 focus area)."],
+        15:["Assemble a 90-sec highlight video (serve + 2 best patterns).","Begin college list (10–15 schools: D1/D2/D3 mix) with coach input.","Strength/conditioning 2–3×/week; track sprint and agility baselines.","Plan 1 campus visit (unofficial) if feasible."],
+        16:["Email 5–8 coaches monthly with results + next tournaments.","Register NCAA/NAIA eligibility centers and send test scores if applicable.","Play at least one higher-level draw (UTR event or USTA L4/L3).","Schedule 1–2 coach calls; prepare 3 thoughtful questions per school."],
+        17:["Confirm core courses and GPA for eligibility; finalize test plans.","Narrow college list to 5–7; schedule official/unofficial visits.","Update video with recent clips; share before visit weekends.","Prepare for NLI timeline (if applicable) and scholarship discussions."]
       };
-
-      /* ===== Helpers ===== */
       function calculateAge(dobStr, atDate = new Date()) {
+        if (!dobStr) return null;
         const birthDate = new Date(dobStr);
         if (isNaN(birthDate)) return null;
         let age = atDate.getFullYear() - birthDate.getFullYear();
@@ -750,7 +609,6 @@ Sincerely,
         if (m < 0 || (m === 0 && atDate.getDate() < birthDate.getDate())) age--;
         return age;
       }
-
       function getQueryParams() {
         const params = new URLSearchParams(window.location.search);
         const name = params.get("name") || "";
@@ -758,65 +616,66 @@ Sincerely,
         const utr = params.get("utr") || "";
         return { name, dob, utr };
       }
-
-      function saveProfile(profile) {
-        try { localStorage.setItem("roadmapProfile", JSON.stringify(profile)); } catch(e) {}
-      }
-
+      function saveProfile(profile) { try { localStorage.setItem("roadmapProfile", JSON.stringify(profile)); } catch(e) {} }
       function loadProfile() {
-        try {
-          const raw = localStorage.getItem("roadmapProfile");
-          if (!raw) return null;
-          return JSON.parse(raw);
-        } catch(e) { return null; }
+        try { const raw = localStorage.getItem("roadmapProfile"); if (!raw) return null; return JSON.parse(raw); }
+        catch(e) { return null; }
       }
-
       function applyTitle(name) {
         const siteTitle = document.getElementById("site-title");
-        siteTitle.textContent = `${name}'s College Tennis Roadmap`;
+        siteTitle.textContent = name ? `${name}'s College Tennis Roadmap` : "College Tennis Roadmap";
       }
-
       function applyIntro(fullname) {
-        document.getElementById("player-fullname").textContent = fullname || DEFAULT_PROFILE.fullname;
+        const span = document.getElementById("player-fullname");
+        if (span) span.textContent = fullname || "the player";
       }
-
       function applyAgeAndUtr(dob, utrVal) {
         const ageNow = calculateAge(dob);
         document.getElementById("john-age").textContent = (ageNow ?? "—");
         const utrEl = document.getElementById("current-utr");
         utrEl.textContent = (utrVal && !Number.isNaN(Number(utrVal))) ? String(utrVal) : "3.xx";
-        return ageNow ?? 13;
+        return ageNow;
       }
-
       function setNextActions(ageNow) {
         const list = document.getElementById("next-actions-list");
+        const hint = document.getElementById("next-actions-hint");
+        if (ageNow == null) {
+          list.innerHTML = "";
+          hint.textContent = "Enter a valid date of birth to generate age-specific action items.";
+          return;
+        }
+        hint.textContent = "Tip: Review with coaches to align training and competition calendars.";
         const items = NEXT_ACTIONS[ageNow] || NEXT_ACTIONS[Math.max(13, Math.min(17, ageNow))] || [];
         list.innerHTML = items.map((t) => `<li>${t}</li>`).join("");
       }
-
       function setTimeline(ageNow) {
-        const A = { fr: ageNow, so: ageNow + 1, jr: ageNow + 2, sr: ageNow + 3 };
-        const rng = (a) => `${a}–${a + 1}`;
         const setText = (id, txt) => (document.getElementById(id).textContent = txt);
         const setHTML = (id, html) => (document.getElementById(id).innerHTML = html);
-
-        setText("fresh-circle", A.fr); setText("soph-circle", A.so); setText("junior-circle", A.jr); setText("senior-circle", A.sr);
-        setText("fresh-title", `Age ${rng(A.fr)} (Freshman)`);
-        setText("soph-title", `Age ${rng(A.so)} (Sophomore)`);
-        setText("junior-title", `Age ${rng(A.jr)} (Junior)`);
-        setText("senior-title", `Age ${rng(A.sr)} (Senior)`);
-
+        if (ageNow == null) {
+          setText("fresh-circle","--"); setText("soph-circle","--"); setText("junior-circle","--"); setText("senior-circle","--");
+          setText("fresh-title","Age -- (Freshman)");
+          setText("soph-title","Age -- (Sophomore)");
+          setText("junior-title","Age -- (Junior)");
+          setText("senior-title","Age -- (Senior)");
+        } else {
+          const A = { fr: ageNow, so: ageNow + 1, jr: ageNow + 2, sr: ageNow + 3 };
+          const rng = (a) => `${a}–${a + 1}`;
+          setText("fresh-circle", A.fr); setText("soph-circle", A.so); setText("junior-circle", A.jr); setText("senior-circle", A.sr);
+          setText("fresh-title", `Age ${rng(A.fr)} (Freshman)`);
+          setText("soph-title", `Age ${rng(A.so)} (Sophomore)`);
+          setText("junior-title", `Age ${rng(A.jr)} (Junior)`);
+          setText("senior-title", `Age ${rng(A.sr)} (Senior)`);
+        }
         setHTML("fresh-utr", `<strong>UTR Target:</strong> ${TARGETS.freshman.min.toFixed(1)} – ${TARGETS.freshman.max.toFixed(1)}`);
         setHTML("soph-utr", `<strong>UTR Target:</strong> ${TARGETS.sophomore.min.toFixed(1)} – ${TARGETS.sophomore.max.toFixed(1)}`);
         setHTML("junior-utr", `<strong>UTR Target:</strong> ${TARGETS.junior.min.toFixed(1)} – ${TARGETS.junior.max.toFixed(1)}`);
         setHTML("senior-utr", `<strong>UTR Target:</strong> ${TARGETS.senior.min.toFixed(1)} – ${TARGETS.senior.max.toFixed(1)}`);
       }
-
-      /* ===== Chart ===== */
       let chartInited = false;
       window.renderChart = function (ageNow) {
         const canvas = document.getElementById("utrChart");
         if (!(canvas && window.Chart)) return false;
+        if (ageNow == null) { showChartFallback(); return false; }
         try {
           const labels = [
             `Age ${ageNow} (Start)`,
@@ -829,23 +688,18 @@ Sincerely,
           const minBand = [baseline, TARGETS.freshman.min, TARGETS.sophomore.min, TARGETS.junior.min, TARGETS.senior.min];
           const maxBand = [baseline, TARGETS.freshman.max, TARGETS.sophomore.max, TARGETS.junior.max, TARGETS.senior.max];
           const midLine = [baseline, mid(TARGETS.freshman), mid(TARGETS.sophomore), mid(TARGETS.junior), mid(TARGETS.senior)];
-
           if (chartInited && canvas._chart) { canvas._chart.destroy(); }
-
           const ctx = canvas.getContext("2d");
           const chart = new Chart(ctx, {
             type: "line",
-            data: {
-              labels,
-              datasets: [
-                { label: "Target Range (min)", data: minBand, borderColor: "rgba(56,189,248,0)", backgroundColor: "rgba(56,189,248,0.15)", pointRadius: 0, fill: "+1" },
-                { label: "Target Range (max)", data: maxBand, borderColor: "rgba(56,189,248,0)", backgroundColor: "rgba(56,189,248,0.15)", pointRadius: 0, fill: false },
-                { label: "Player Target (midpoint)", data: midLine, borderColor: "#38BDF8", backgroundColor: "rgba(56,189,248,0.25)", tension: 0.35, pointRadius: 5, pointBackgroundColor: "#38BDF8", fill: false },
-                { label: "NCAA D3 Minimum", data: [6,6,6,6,6], borderColor: "rgba(52,211,153,0.6)", borderDash: [5,5], pointRadius: 0, fill: false },
-                { label: "NCAA D2 Target", data: [9.5,9.5,9.5,9.5,9.5], borderColor: "rgba(251,191,36,0.7)", borderDash: [5,5], pointRadius: 0, fill: false },
-                { label: "NCAA D1 Target", data: [12.5,12.5,12.5,12.5,12.5], borderColor: "rgba(251,113,133,0.7)", borderDash: [5,5], pointRadius: 0, fill: false }
-              ]
-            },
+            data: { labels, datasets: [
+              { label: "Target Range (min)", data: minBand, borderColor: "rgba(56,189,248,0)", backgroundColor: "rgba(56,189,248,0.15)", pointRadius: 0, fill: "+1" },
+              { label: "Target Range (max)", data: maxBand, borderColor: "rgba(56,189,248,0)", backgroundColor: "rgba(56,189,248,0.15)", pointRadius: 0, fill: false },
+              { label: "Player Target (midpoint)", data: midLine, borderColor: "#38BDF8", backgroundColor: "rgba(56,189,248,0.25)", tension: 0.35, pointRadius: 5, pointBackgroundColor: "#38BDF8", fill: false },
+              { label: "NCAA D3 Minimum", data: [6,6,6,6,6], borderColor: "rgba(52,211,153,0.6)", borderDash: [5,5], pointRadius: 0, fill: false },
+              { label: "NCAA D2 Target", data: [9.5,9.5,9.5,9.5,9.5], borderColor: "rgba(251,191,36,0.7)", borderDash: [5,5], pointRadius: 0, fill: false },
+              { label: "NCAA D1 Target", data: [12.5,12.5,12.5,12.5,12.5], borderColor: "rgba(251,113,133,0.7)", borderDash: [5,5], pointRadius: 0, fill: false }
+            ]},
             options: {
               responsive:true, maintainAspectRatio:false,
               scales:{
@@ -865,7 +719,6 @@ Sincerely,
           return true;
         } catch (e) { console.warn("Chart render failed:", e); return false; }
       };
-
       function showChartFallback(){
         const el = document.getElementById("chart-fallback");
         if (!el) return;
@@ -876,89 +729,50 @@ Sincerely,
         document.getElementById("fb-junior").textContent = `End Junior: ${fmt(TARGETS.junior.min,TARGETS.junior.max)}`;
         document.getElementById("fb-senior").textContent = `End Senior: ${fmt(TARGETS.senior.min,TARGETS.senior.max)}`;
       }
-
-      /* ===== Apply Profile ===== */
       function applyProfile(profile) {
-        const name = (profile.name || DEFAULT_PROFILE.name).trim();
-        const fullname = (profile.fullname || profile.name || DEFAULT_PROFILE.fullname).trim();
-        const dob = profile.dob || DEFAULT_PROFILE.dob;
+        const name = (profile.name || "").trim();
+        const fullname = (profile.fullname || profile.name || "").trim();
+        const dob = profile.dob || "";
         const utr = profile.utr || "";
-
-        // Header + intro text
+        const intro = document.getElementById("intro-title");
         applyTitle(name);
-        applyIntro(fullname);
-
-        // Stats
+        if (intro && name) intro.textContent = `The Pathway to Collegiate Tennis for ${fullname}`;
+        else if (intro) intro.textContent = "The Pathway to Collegiate Tennis";
         const ageNow = applyAgeAndUtr(dob, utr);
-
-        // Next actions + timeline + chart
         setNextActions(ageNow);
         setTimeline(ageNow);
-        if (!window.Chart) {
-          showChartFallback();
-        } else {
-          window.renderChart(ageNow);
-        }
+        if (!window.Chart) { showChartFallback(); } else { window.renderChart(ageNow); }
       }
-
-      /* ===== Populate form ===== */
       function fillForm(profile) {
         document.getElementById("inp-name").value = profile.fullname || profile.name || "";
         document.getElementById("inp-dob").value = profile.dob || "";
         document.getElementById("inp-utr").value = profile.utr || "";
       }
-
-      /* ===== Init (order: URL → localStorage → defaults) ===== */
       (function initProfile() {
         const url = getQueryParams();
         let profile = null;
-
         if (url.name || url.dob || url.utr) {
-          profile = {
-            name: (url.name || "").split(" ")[0] || DEFAULT_PROFILE.name,
-            fullname: url.name || DEFAULT_PROFILE.fullname,
-            dob: url.dob || DEFAULT_PROFILE.dob,
-            utr: url.utr || ""
-          };
+          profile = { name: (url.name || "").split(" ")[0] || "", fullname: url.name || "", dob: url.dob || "", utr: url.utr || "" };
           saveProfile(profile);
         } else {
           const saved = loadProfile();
-          if (saved) {
-            profile = {
-              name: saved.name || DEFAULT_PROFILE.name,
-              fullname: saved.fullname || saved.name || DEFAULT_PROFILE.fullname,
-              dob: saved.dob || DEFAULT_PROFILE.dob,
-              utr: saved.utr || ""
-            };
-          } else {
-            profile = { ...DEFAULT_PROFILE };
-          }
+          if (saved) { profile = { name: saved.name || "", fullname: saved.fullname || saved.name || "", dob: saved.dob || "", utr: saved.utr || "" }; }
+          else { profile = { ...DEFAULT_PROFILE }; }
         }
-
         fillForm(profile);
         applyProfile(profile);
       })();
-
-      /* ===== Form handlers ===== */
       document.getElementById("profile-form").addEventListener("submit", (e) => {
         e.preventDefault();
         const fullname = document.getElementById("inp-name").value.trim();
         const dob = document.getElementById("inp-dob").value.trim();
         const utr = document.getElementById("inp-utr").value.trim();
-
-        // Basic validation
         const dobValid = /^\d{4}-\d{2}-\d{2}$/.test(dob) && !isNaN(new Date(dob).getTime()) && new Date(dob) <= new Date();
-        if (!fullname || !dobValid) {
-          alert("Please enter a valid Name and DOB in YYYY-MM-DD (not in the future).");
-          return;
-        }
-
+        if (!fullname || !dobValid) { alert("Please enter a valid Name and DOB in YYYY-MM-DD (not in the future)."); return; }
         const firstName = fullname.split(" ")[0] || fullname;
         const profile = { name: firstName, fullname, dob, utr };
         saveProfile(profile);
         applyProfile(profile);
-
-        // Update query params for shareable link
         const params = new URLSearchParams(window.location.search);
         params.set("name", fullname);
         params.set("dob", dob);
@@ -966,22 +780,13 @@ Sincerely,
         const newUrl = `${window.location.pathname}?${params.toString()}`;
         window.history.replaceState({}, "", newUrl);
       });
-
       document.getElementById("btn-reset").addEventListener("click", () => {
         try { localStorage.removeItem("roadmapProfile"); } catch(e) {}
-        // Clear query params
         window.history.replaceState({}, "", window.location.pathname);
         fillForm(DEFAULT_PROFILE);
         applyProfile(DEFAULT_PROFILE);
       });
-
-      /* ===== Chart init or fallback ===== */
-      (function initChart(){
-        if (!window.Chart) { showChartFallback(); }
-        // Chart will render during applyProfile with age
-      })();
-
-      /* Reload Chart button */
+      (function initChart(){ if (!window.Chart) { showChartFallback(); } })();
       (function(){
         const btn=document.getElementById("btn-reload-chart");
         if(!btn) return;
@@ -989,9 +794,8 @@ Sincerely,
           const original=btn.textContent; btn.disabled=true; btn.textContent="Loading…";
           try{
             await window.reloadChartJs();
-            // Re-render with current age
-            const dob = document.getElementById("inp-dob").value.trim() || DEFAULT_PROFILE.dob;
-            const ageNow = calculateAge(dob) ?? 13;
+            const dob = document.getElementById("inp-dob").value.trim();
+            const ageNow = calculateAge(dob);
             setTimeout(()=>{
               const ok=window.renderChart(ageNow);
               if(!ok) throw new Error("Render failed");
@@ -1001,8 +805,6 @@ Sincerely,
           }catch(e){ console.warn(e); btn.disabled=false; btn.textContent="Retry"; }
         });
       })();
-
-      /* Accordions */
       document.querySelectorAll(".accordion-item").forEach(item=>{
         const header=item.querySelector(".accordion-header");
         const content=item.querySelector(".accordion-content");
@@ -1023,8 +825,6 @@ Sincerely,
         });
         header.setAttribute("aria-expanded","false");
       });
-
-      /* Active nav highlight */
       const navLinks=document.querySelectorAll(".nav-link");
       const sections=document.querySelectorAll("section[id]");
       navLinks.forEach(link=>{
@@ -1049,8 +849,6 @@ Sincerely,
           ticking=true;
         }
       },{passive:true});
-
-      /* Mobile menu */
       const btn=document.getElementById("mobile-menu-button");
       const closeBtn=document.getElementById("close-mobile-menu");
       const overlay=document.getElementById("mobile-menu-overlay");
@@ -1070,30 +868,13 @@ Sincerely,
           setTimeout(closeMenu,300);
         });
       });
-
-      /* Print buttons */
       (function initPrint() {
         const btnAll = document.getElementById('btn-print-all');
         const btnCC  = document.getElementById('btn-print-cc');
-
-        function openPrint() {
-          try { window.focus(); setTimeout(() => window.print(), 0); }
-          catch(e) { console.warn('Print blocked', e); }
-        }
-
-        btnAll?.addEventListener('click', () => {
-          document.body.classList.remove('print-limited');
-          openPrint();
-        });
-
-        btnCC?.addEventListener('click', () => {
-          document.body.classList.add('print-limited');
-          openPrint();
-          setTimeout(() => document.body.classList.remove('print-limited'), 1500);
-        });
+        function openPrint() { try { window.focus(); setTimeout(() => window.print(), 0); } catch(e) { console.warn('Print blocked', e); } }
+        btnAll?.addEventListener('click', () => { document.body.classList.remove('print-limited'); openPrint(); });
+        btnCC?.addEventListener('click', () => { document.body.classList.add('print-limited'); openPrint(); setTimeout(() => document.body.classList.remove('print-limited'), 1500); });
       })();
-
-      /* Copy email */
       (function initCopy(){
         const copyBtn=document.getElementById("copy-email");
         const emailBox=document.getElementById("email-template");
