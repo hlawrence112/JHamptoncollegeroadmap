@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>John Hampton's Pathway to College Tennis: An Interactive Roadmap</title>
-  <meta name="description" content="A year-by-year interactive roadmap for John Hampton to progress toward collegiate tennis — UTR targets, timeline, recruitment guidance, SWOT, resources, and parent tools." />
+  <title>College Tennis Roadmap</title>
+  <meta name="description" content="An interactive, personalized roadmap to guide junior players toward college tennis — metrics, timeline, recruiting milestones, and parent tools." />
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Resilient Chart.js loader (Promise-based reloader) -->
+  <!-- Resilient Chart.js loader -->
   <script>
     (function () {
       const CDNS = [
@@ -15,14 +15,14 @@
         "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.3/chart.umd.min.js",
         "https://unpkg.com/chart.js@4.4.3/dist/chart.umd.js"
       ];
-      function loadFrom(index) {
+      function loadFrom(i) {
         return new Promise((resolve, reject) => {
-          if (index >= CDNS.length) return reject(new Error("All CDNs failed"));
+          if (i >= CDNS.length) return reject(new Error("All CDNs failed"));
           const s = document.createElement("script");
-          s.src = CDNS[index];
+          s.src = CDNS[i];
           s.async = true;
-          s.onload = () => resolve(CDNS[index]);
-          s.onerror = () => loadFrom(index + 1).then(resolve).catch(reject);
+          s.onload = () => resolve(CDNS[i]);
+          s.onerror = () => loadFrom(i + 1).then(resolve).catch(reject);
           document.head.appendChild(s);
         });
       }
@@ -73,6 +73,13 @@
     .no-print{display:block}
     .print-only{display:none}
 
+    /* Accessibility helper if Tailwind's sr-only isn't available at runtime */
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+
     @media print {
       html,body{background:#fff !important;color:#000 !important}
       .bg-stone-800,.bg-stone-900,.bg-stone-700{background:#fff !important}
@@ -85,24 +92,26 @@
       main.container,.container{max-width:100% !important;padding:0 12mm !important}
       a[href]:after{content:'' !important}
 
-      /* === NEW: Limit print to Next Actions + Milestones when print-limited is set === */
+      /* Limit print to Next Actions + Milestones when print-limited is set */
       body.print-limited section:not(#next-actions):not(#milestones){
         display:none !important;
       }
-      #next-actions, #milestones {
-        page-break-inside: avoid;
-      }
+      #next-actions, #milestones { page-break-inside: avoid; }
     }
   </style>
 </head>
 <body class="antialiased">
+  <a href="#intro" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:bg-sky-600 focus:text-white focus:px-3 focus:py-2 focus:rounded">
+    Skip to content
+  </a>
+
   <div id="page-wrapper">
     <!-- Header -->
     <header class="bg-stone-800/90 backdrop-blur-lg sticky top-0 z-50 shadow-sm no-print">
       <nav class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-center mb-3">
           <span class="text-4xl mr-3" role="img" aria-label="Tennis Ball">🎾</span>
-          <h1 class="text-2xl md:text-3xl font-bold">John Hampton's College Tennis Roadmap</h1>
+          <h1 id="site-title" class="text-2xl md:text-3xl font-bold">John Hampton's College Tennis Roadmap</h1>
         </div>
         <div class="hidden md:flex items-center justify-center flex-wrap gap-x-6 gap-y-2" role="navigation" aria-label="Main navigation">
           <a href="#vision" class="nav-link text-stone-300 hover:text-sky-400 font-medium pb-1">The Vision</a>
@@ -137,35 +146,66 @@
 
     <!-- Main -->
     <main class="container mx-auto p-4 md:p-8">
-      <!-- Intro -->
+      <!-- Intro + Personalization -->
       <section id="intro" class="text-center mb-16">
-        <h2 class="text-4xl md:text-5xl font-extrabold mb-4">The Pathway to Collegiate Tennis</h2>
-        <p class="max-w-3xl mx-auto text-lg text-stone-300">A comprehensive, year-by-year guide to prepare John Kylan Hampton for college tennis — athletic development, academics, and recruitment strategy.</p>
+        <h2 class="text-4xl md:text-5xl font-extrabold mb-4" id="intro-title">The Pathway to Collegiate Tennis</h2>
+        <p class="max-w-3xl mx-auto text-lg text-stone-300">
+          A comprehensive, year-by-year guide to prepare <span id="player-fullname">John Kylan Hampton</span> for college tennis — athletic development, academics, and recruitment strategy.
+        </p>
 
-        <!-- Audio + Video buttons -->
+        <!-- Personalization Box -->
+        <div class="mt-6 max-w-4xl mx-auto bg-stone-800/70 rounded-xl p-4 md:p-5 shadow-md">
+          <form id="profile-form" class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+            <div class="md:col-span-4 text-left">
+              <label for="inp-name" class="block text-sm text-stone-300 mb-1">Player Name</label>
+              <input id="inp-name" type="text" placeholder="e.g., Alex Morgan"
+                     class="w-full px-3 py-2 rounded bg-stone-900 text-stone-100 border border-stone-700 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+            </div>
+            <div class="md:col-span-4 text-left">
+              <label for="inp-dob" class="block text-sm text-stone-300 mb-1">Date of Birth (YYYY-MM-DD)</label>
+              <input id="inp-dob" type="text" placeholder="e.g., 2012-01-13"
+                     class="w-full px-3 py-2 rounded bg-stone-900 text-stone-100 border border-stone-700 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+            </div>
+            <div class="md:col-span-3 text-left">
+              <label for="inp-utr" class="block text-sm text-stone-300 mb-1">Current UTR (optional)</label>
+              <input id="inp-utr" type="number" step="0.1" min="0" max="16" placeholder="e.g., 4.0"
+                     class="w-full px-3 py-2 rounded bg-stone-900 text-stone-100 border border-stone-700 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+            </div>
+            <div class="md:col-span-1 flex gap-2">
+              <button id="btn-generate" type="submit" class="flex-1 bg-sky-600 hover:bg-sky-500 text-white px-3 py-2 rounded">Generate</button>
+            </div>
+          </form>
+          <div class="mt-2 text-xs text-stone-400">
+            This runs in your browser only. Use the Reset link to clear saved info.
+            <button id="btn-reset" class="ml-2 text-rose-400 hover:underline">Reset Roadmap</button>
+          </div>
+        </div>
+
+        <!-- Audio/Video buttons -->
         <div class="mt-6 flex justify-center gap-3 flex-wrap">
           <a
             href="https://notebooklm.google.com/notebook/d50a0031-7f1b-48bb-b299-25a7082b4143?artifactId=3a67242a-aa48-4214-be73-0b520b6895e4"
             target="_blank" rel="noopener"
-            title="An audio summary of John’s college tennis roadmap"
+            title="An audio summary of this college tennis roadmap"
             class="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white px-5 py-2 rounded-lg shadow transition"
           >🎧 <span>Listen to Audio Overview</span></a>
 
           <a
             href="https://notebooklm.google.com/notebook/d50a0031-7f1b-48bb-b299-25a7082b4143?artifactId=8155dc5b-6e22-47ee-b840-48edb39e82a1"
             target="_blank" rel="noopener"
-            title="Watch a visual walkthrough of John's College Tennis Roadmap"
+            title="Watch a visual walkthrough of this roadmap"
             class="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-400 text-white px-5 py-2 rounded-lg shadow transition"
           >🎥 <span>Watch Video Overview</span></a>
         </div>
 
+        <!-- Stats -->
         <div class="mt-8 flex justify-center items-center space-x-8">
           <div class="text-center">
             <p id="john-age" class="text-3xl font-bold text-sky-400">—</p>
             <p class="text-sm text-stone-300">Current Age</p>
           </div>
           <div class="text-center">
-            <p class="text-3xl font-bold text-sky-400">4.25</p>
+            <p id="current-utr" class="text-3xl font-bold text-sky-400">3.xx</p>
             <p class="text-sm text-stone-300">Current UTR</p>
           </div>
         </div>
@@ -204,7 +244,7 @@
                   <li><strong>GPA & Rigor:</strong> Strong GPA in challenging courses (AP/IB).</li>
                   <li><strong>Tests:</strong> High SAT/ACT for eligibility and scholarships.</li>
                   <li><strong>NCAA/NAIA:</strong> Meet core course and GPA requirements.</li>
-                  <li><strong>Discipline:</strong> Time management and consistency in studies.</li>
+                  <li><strong>Discipline:</strong> Time management and consistent study habits.</li>
                 </ul>
               </div>
             </div>
@@ -232,7 +272,7 @@
       <!-- Next Actions -->
       <section id="next-actions" class="mb-16 scroll-mt-20">
         <h3 class="text-3xl font-bold text-center mb-2">Next Actions (This Month)</h3>
-        <p class="text-center text-stone-300 mb-8 max-w-2xl mx-auto">Quick, high-impact tasks generated from John’s current age. These refresh automatically each year based on his date of birth.</p>
+        <p class="text-center text-stone-300 mb-8 max-w-2xl mx-auto">Quick, high-impact tasks generated from the player’s current age. These refresh automatically based on date of birth.</p>
         <div class="max-w-3xl mx-auto bg-stone-800 p-6 rounded-lg shadow-md">
           <ul id="next-actions-list" class="list-disc list-inside space-y-2 text-stone-300"></ul>
           <p class="text-xs text-stone-400 mt-4">Tip: Review with coaches to align training and competition calendars.</p>
@@ -242,7 +282,7 @@
       <!-- Metrics -->
       <section id="metrics" class="mb-16 scroll-mt-20">
         <h3 class="text-3xl font-bold text-center mb-2">The Metrics: UTR Targets by Year</h3>
-        <p class="text-center text-stone-300 mb-8 max-w-2xl mx-auto">The chart shows the target range by the end of each high‑school year, matching the pathway below.</p>
+        <p class="text-center text-stone-300 mb-8 max-w-2xl mx-auto">The chart shows the target range by the end of each high-school year, matching the pathway below.</p>
 
         <div class="bg-stone-800 p-4 md:p-8 rounded-xl shadow-lg">
           <div class="chart-container">
@@ -421,7 +461,7 @@
               <li><strong>Why:</strong> Coaches compare players using UTR and TRN.</li>
               <li><strong>When:</strong>
                 <ul class="list-disc list-inside ml-4 mt-1">
-                  <li><strong>Age 13–14:</strong> Create profiles; play UTR‑verified events.</li>
+                  <li><strong>Age 13–14:</strong> Create profiles; play UTR-verified events.</li>
                   <li><strong>Ongoing:</strong> Update results, academics, and highlights.</li>
                 </ul>
               </li>
@@ -616,7 +656,7 @@ Sincerely,
     <!-- Footer -->
     <footer class="bg-stone-900 text-white mt-16 no-print">
       <div class="container mx-auto p-8 text-center text-sm">
-        <p class="mb-1 text-stone-400">&copy; 2025 John Kylan Hampton College Tennis Roadmap. All rights reserved.</p>
+        <p class="mb-1 text-stone-400">&copy; 2025 College Tennis Roadmap. All rights reserved.</p>
         <p class="mb-1 text-stone-400">Prepared by: Herman Lawrence, <a href="mailto:hlawrence112@gmail.com" class="text-sky-400 hover:underline">hlawrence112@gmail.com</a></p>
         <p class="mb-1 text-stone-400">Last Updated: July 31, 2025</p>
         <p class="text-stone-400">Disclaimer: This roadmap is a guide and does not guarantee specific outcomes or scholarship offers.</p>
@@ -650,10 +690,15 @@ Sincerely,
   <!-- Scripts -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      /* ===== Config ===== */
-      const johnDOB = "2012-01-13"; // John's DOB (YYYY-MM-DD)
+      /* ===== Defaults ===== */
+      const DEFAULT_PROFILE = {
+        name: "John Hampton",
+        fullname: "John Kylan Hampton",
+        dob: "2012-01-13",
+        utr: "" // empty shows "3.xx"
+      };
 
-      /* ===== Targets (shared) ===== */
+      /* ===== Targets ===== */
       const TARGETS = {
         freshman:  { min: 4.0,  max: 4.5 },
         sophomore: { min: 5.5,  max: 7.0 },
@@ -662,7 +707,7 @@ Sincerely,
       };
       const mid = (v) => (v.min + v.max) / 2;
 
-      /* ===== Next Actions ===== */
+      /* ===== Next Actions by age ===== */
       const NEXT_ACTIONS = {
         13: [
           "Create/complete UTR and TRN profiles with a current photo.",
@@ -672,12 +717,12 @@ Sincerely,
         ],
         14: [
           "Book USTA L6/L5 events for the next 8–10 weeks (mix singles/doubles).",
-          "Baseline patterns: cross‑court heavy topspin, add slice variation.",
+          "Baseline patterns: cross-court heavy topspin, add slice variation.",
           "Start light SAT/ACT exposure (vocab/math drills 10–15 min/day).",
           "Log match notes after each event (3 strengths, 1 focus area)."
         ],
         15: [
-          "Assemble a 90‑sec highlight video (serve + 2 best patterns).",
+          "Assemble a 90-sec highlight video (serve + 2 best patterns).",
           "Begin college list (10–15 schools: D1/D2/D3 mix) with coach input.",
           "Strength/conditioning 2–3×/week; track sprint and agility baselines.",
           "Plan 1 campus visit (unofficial) if feasible."
@@ -705,20 +750,51 @@ Sincerely,
         if (m < 0 || (m === 0 && atDate.getDate() < birthDate.getDate())) age--;
         return age;
       }
-      const ageNow = calculateAge(johnDOB) ?? 13;
 
-      /* Header age */
-      document.getElementById("john-age").textContent = ageNow;
+      function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        const name = params.get("name") || "";
+        const dob = params.get("dob") || "";
+        const utr = params.get("utr") || "";
+        return { name, dob, utr };
+      }
 
-      /* Next Actions */
-      (function setNextActions() {
+      function saveProfile(profile) {
+        try { localStorage.setItem("roadmapProfile", JSON.stringify(profile)); } catch(e) {}
+      }
+
+      function loadProfile() {
+        try {
+          const raw = localStorage.getItem("roadmapProfile");
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch(e) { return null; }
+      }
+
+      function applyTitle(name) {
+        const siteTitle = document.getElementById("site-title");
+        siteTitle.textContent = `${name}'s College Tennis Roadmap";
+      }
+
+      function applyIntro(fullname) {
+        document.getElementById("player-fullname").textContent = fullname || DEFAULT_PROFILE.fullname;
+      }
+
+      function applyAgeAndUtr(dob, utrVal) {
+        const ageNow = calculateAge(dob);
+        document.getElementById("john-age").textContent = (ageNow ?? "—");
+        const utrEl = document.getElementById("current-utr");
+        utrEl.textContent = (utrVal && !Number.isNaN(Number(utrVal))) ? String(utrVal) : "3.xx";
+        return ageNow ?? 13;
+      }
+
+      function setNextActions(ageNow) {
         const list = document.getElementById("next-actions-list");
         const items = NEXT_ACTIONS[ageNow] || NEXT_ACTIONS[Math.max(13, Math.min(17, ageNow))] || [];
         list.innerHTML = items.map((t) => `<li>${t}</li>`).join("");
-      })();
+      }
 
-      /* Timeline */
-      (function setTimeline() {
+      function setTimeline(ageNow) {
         const A = { fr: ageNow, so: ageNow + 1, jr: ageNow + 2, sr: ageNow + 3 };
         const rng = (a) => `${a}–${a + 1}`;
         const setText = (id, txt) => (document.getElementById(id).textContent = txt);
@@ -734,10 +810,11 @@ Sincerely,
         setHTML("soph-utr", `<strong>UTR Target:</strong> ${TARGETS.sophomore.min.toFixed(1)} – ${TARGETS.sophomore.max.toFixed(1)}`);
         setHTML("junior-utr", `<strong>UTR Target:</strong> ${TARGETS.junior.min.toFixed(1)} – ${TARGETS.junior.max.toFixed(1)}`);
         setHTML("senior-utr", `<strong>UTR Target:</strong> ${TARGETS.senior.min.toFixed(1)} – ${TARGETS.senior.max.toFixed(1)}`);
-      })();
+      }
 
-      /* Chart render */
-      window.renderChart = function () {
+      /* ===== Chart ===== */
+      let chartInited = false;
+      window.renderChart = function (ageNow) {
         const canvas = document.getElementById("utrChart");
         if (!(canvas && window.Chart)) return false;
         try {
@@ -751,18 +828,19 @@ Sincerely,
           const baseline = 3.0;
           const minBand = [baseline, TARGETS.freshman.min, TARGETS.sophomore.min, TARGETS.junior.min, TARGETS.senior.min];
           const maxBand = [baseline, TARGETS.freshman.max, TARGETS.sophomore.max, TARGETS.junior.max, TARGETS.senior.max];
-          const mid = (v) => (v.min + v.max) / 2;
           const midLine = [baseline, mid(TARGETS.freshman), mid(TARGETS.sophomore), mid(TARGETS.junior), mid(TARGETS.senior)];
 
+          if (chartInited && canvas._chart) { canvas._chart.destroy(); }
+
           const ctx = canvas.getContext("2d");
-          new Chart(ctx, {
+          const chart = new Chart(ctx, {
             type: "line",
             data: {
               labels,
               datasets: [
                 { label: "Target Range (min)", data: minBand, borderColor: "rgba(56,189,248,0)", backgroundColor: "rgba(56,189,248,0.15)", pointRadius: 0, fill: "+1" },
                 { label: "Target Range (max)", data: maxBand, borderColor: "rgba(56,189,248,0)", backgroundColor: "rgba(56,189,248,0.15)", pointRadius: 0, fill: false },
-                { label: "John's Target (midpoint)", data: midLine, borderColor: "#38BDF8", backgroundColor: "rgba(56,189,248,0.25)", tension: 0.35, pointRadius: 5, pointBackgroundColor: "#38BDF8", fill: false },
+                { label: "Player Target (midpoint)", data: midLine, borderColor: "#38BDF8", backgroundColor: "rgba(56,189,248,0.25)", tension: 0.35, pointRadius: 5, pointBackgroundColor: "#38BDF8", fill: false },
                 { label: "NCAA D3 Minimum", data: [6,6,6,6,6], borderColor: "rgba(52,211,153,0.6)", borderDash: [5,5], pointRadius: 0, fill: false },
                 { label: "NCAA D2 Target", data: [9.5,9.5,9.5,9.5,9.5], borderColor: "rgba(251,191,36,0.7)", borderDash: [5,5], pointRadius: 0, fill: false },
                 { label: "NCAA D1 Target", data: [12.5,12.5,12.5,12.5,12.5], borderColor: "rgba(251,113,133,0.7)", borderDash: [5,5], pointRadius: 0, fill: false }
@@ -781,25 +859,126 @@ Sincerely,
               }
             }
           });
+          canvas._chart = chart;
+          chartInited = true;
           document.getElementById("chart-fallback")?.classList.add("hidden");
           return true;
         } catch (e) { console.warn("Chart render failed:", e); return false; }
       };
 
-      /* Init chart or fallback */
-      (function initChart(){
-        if (!window.Chart) { showFallback(); }
-        else { const ok = window.renderChart(); if (!ok) showFallback(); }
-        function showFallback(){
-          const el = document.getElementById("chart-fallback");
-          if (!el) return;
-          el.classList.remove("hidden");
-          const fmt = (mn,mx)=>`${mn.toFixed(1)} – ${mx.toFixed(1)}`;
-          document.getElementById("fb-fresh").textContent  = `End Freshman: ${fmt(TARGETS.freshman.min,TARGETS.freshman.max)}`;
-          document.getElementById("fb-soph").textContent   = `End Sophomore: ${fmt(TARGETS.sophomore.min,TARGETS.sophomore.max)}`;
-          document.getElementById("fb-junior").textContent = `End Junior: ${fmt(TARGETS.junior.min,TARGETS.junior.max)}`;
-          document.getElementById("fb-senior").textContent = `End Senior: ${fmt(TARGETS.senior.min,TARGETS.senior.max)}`;
+      function showChartFallback(){
+        const el = document.getElementById("chart-fallback");
+        if (!el) return;
+        el.classList.remove("hidden");
+        const fmt = (mn,mx)=>`${mn.toFixed(1)} – ${mx.toFixed(1)}`;
+        document.getElementById("fb-fresh").textContent  = `End Freshman: ${fmt(TARGETS.freshman.min,TARGETS.freshman.max)}`;
+        document.getElementById("fb-soph").textContent   = `End Sophomore: ${fmt(TARGETS.sophomore.min,TARGETS.sophomore.max)}`;
+        document.getElementById("fb-junior").textContent = `End Junior: ${fmt(TARGETS.junior.min,TARGETS.junior.max)}`;
+        document.getElementById("fb-senior").textContent = `End Senior: ${fmt(TARGETS.senior.min,TARGETS.senior.max)}`;
+      }
+
+      /* ===== Apply Profile ===== */
+      function applyProfile(profile) {
+        const name = (profile.name || DEFAULT_PROFILE.name).trim();
+        const fullname = (profile.fullname || profile.name || DEFAULT_PROFILE.fullname).trim();
+        const dob = profile.dob || DEFAULT_PROFILE.dob;
+        const utr = profile.utr || "";
+
+        // Header + intro text
+        applyTitle(name);
+        applyIntro(fullname);
+
+        // Stats
+        const ageNow = applyAgeAndUtr(dob, utr);
+
+        // Next actions + timeline + chart
+        setNextActions(ageNow);
+        setTimeline(ageNow);
+        if (!window.Chart) {
+          showChartFallback();
+        } else {
+          window.renderChart(ageNow);
         }
+      }
+
+      /* ===== Populate form ===== */
+      function fillForm(profile) {
+        document.getElementById("inp-name").value = profile.fullname || profile.name || "";
+        document.getElementById("inp-dob").value = profile.dob || "";
+        document.getElementById("inp-utr").value = profile.utr || "";
+      }
+
+      /* ===== Init (order: URL → localStorage → defaults) ===== */
+      (function initProfile() {
+        const url = getQueryParams();
+        let profile = null;
+
+        if (url.name || url.dob || url.utr) {
+          profile = {
+            name: (url.name || "").split(" ")[0] || DEFAULT_PROFILE.name,
+            fullname: url.name || DEFAULT_PROFILE.fullname,
+            dob: url.dob || DEFAULT_PROFILE.dob,
+            utr: url.utr || ""
+          };
+          saveProfile(profile);
+        } else {
+          const saved = loadProfile();
+          if (saved) {
+            profile = {
+              name: saved.name || DEFAULT_PROFILE.name,
+              fullname: saved.fullname || saved.name || DEFAULT_PROFILE.fullname,
+              dob: saved.dob || DEFAULT_PROFILE.dob,
+              utr: saved.utr || ""
+            };
+          } else {
+            profile = { ...DEFAULT_PROFILE };
+          }
+        }
+
+        fillForm(profile);
+        applyProfile(profile);
+      })();
+
+      /* ===== Form handlers ===== */
+      document.getElementById("profile-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const fullname = document.getElementById("inp-name").value.trim();
+        const dob = document.getElementById("inp-dob").value.trim();
+        const utr = document.getElementById("inp-utr").value.trim();
+
+        // Basic validation
+        const dobValid = /^\d{4}-\d{2}-\d{2}$/.test(dob) && !isNaN(new Date(dob).getTime()) && new Date(dob) <= new Date();
+        if (!fullname || !dobValid) {
+          alert("Please enter a valid Name and DOB in YYYY-MM-DD (not in the future).");
+          return;
+        }
+
+        const firstName = fullname.split(" ")[0] || fullname;
+        const profile = { name: firstName, fullname, dob, utr };
+        saveProfile(profile);
+        applyProfile(profile);
+
+        // Update query params for shareable link
+        const params = new URLSearchParams(window.location.search);
+        params.set("name", fullname);
+        params.set("dob", dob);
+        if (utr) params.set("utr", utr); else params.delete("utr");
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.replaceState({}, "", newUrl);
+      });
+
+      document.getElementById("btn-reset").addEventListener("click", () => {
+        try { localStorage.removeItem("roadmapProfile"); } catch(e) {}
+        // Clear query params
+        window.history.replaceState({}, "", window.location.pathname);
+        fillForm(DEFAULT_PROFILE);
+        applyProfile(DEFAULT_PROFILE);
+      });
+
+      /* ===== Chart init or fallback ===== */
+      (function initChart(){
+        if (!window.Chart) { showChartFallback(); }
+        // Chart will render during applyProfile with age
       })();
 
       /* Reload Chart button */
@@ -810,8 +989,11 @@ Sincerely,
           const original=btn.textContent; btn.disabled=true; btn.textContent="Loading…";
           try{
             await window.reloadChartJs();
+            // Re-render with current age
+            const dob = document.getElementById("inp-dob").value.trim() || DEFAULT_PROFILE.dob;
+            const ageNow = calculateAge(dob) ?? 13;
             setTimeout(()=>{
-              const ok=window.renderChart();
+              const ok=window.renderChart(ageNow);
               if(!ok) throw new Error("Render failed");
               btn.disabled=false; btn.textContent=original;
               document.getElementById("chart-fallback")?.classList.add("hidden");
@@ -889,18 +1071,14 @@ Sincerely,
         });
       });
 
-      /* === NEW: Robust print handlers === */
+      /* Print buttons */
       (function initPrint() {
         const btnAll = document.getElementById('btn-print-all');
         const btnCC  = document.getElementById('btn-print-cc');
 
         function openPrint() {
-          try {
-            window.focus();
-            setTimeout(() => window.print(), 0);
-          } catch(e) {
-            console.warn('Print blocked', e);
-          }
+          try { window.focus(); setTimeout(() => window.print(), 0); }
+          catch(e) { console.warn('Print blocked', e); }
         }
 
         btnAll?.addEventListener('click', () => {
