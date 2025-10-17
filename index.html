@@ -6,6 +6,8 @@
   <title>College Tennis Roadmap</title>
   <meta name="description" content="An interactive, personalized roadmap to guide junior players toward college tennis — metrics, timeline, recruiting milestones, and parent tools." />
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js loader with CDN fallback -->
   <script>
     (function () {
       const CDNS = [
@@ -15,7 +17,7 @@
       ];
       function loadFrom(i) {
         return new Promise((resolve, reject) => {
-          if (i >= CDNS.length) return reject(new Error("All CDNs failed"));
+          if (i >= CDNS.length) return reject(new Error("All Chart.js CDNs failed"));
           const s = document.createElement("script");
           s.src = CDNS[i];
           s.async = true;
@@ -30,18 +32,24 @@
       };
     })();
   </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
   <style>
     body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica Neue,Arial;background:#1C1917;color:#F5F5F4;overflow-x:hidden}
     #page-wrapper{transition:transform .3s ease-in-out}
     #page-wrapper.menu-open{transform:translateX(-80%)}
     .nav-link.active{color:#38BDF8;border-bottom:2px solid #38BDF8}
-    .chart-container{position:relative;width:100%;max-width:900px;margin-left:auto;margin-right:auto;height:300px}
-    @media (min-width:768px){.chart-container{height:400px}}
+
+    .chart-container{position:relative;width:100%;max-width:900px;margin:0 auto;height:300px}
+    @media (min-width:768px){.chart-container{height:420px}}
+
     .accordion-content{max-height:0;overflow:hidden;transition:max-height .45s ease,opacity .25s ease;opacity:0}
     .accordion-content.open{opacity:1}
+
+    /* Timeline */
     .timeline-line{left:50%}
     .left-timeline{flex-direction:row-reverse}
     .right-timeline{flex-direction:row}
@@ -52,17 +60,26 @@
       .left-timeline>div:nth-child(2),.right-timeline>div:nth-child(2){margin-left:0;margin-right:0;position:absolute;left:0}
       .left-timeline>div:last-child,.right-timeline>div:last-child{width:calc(100% - 60px);margin-left:60px}
     }
+
+    /* Mobile menu */
     #mobile-menu-overlay{position:fixed;top:0;right:0;width:80%;max-width:320px;height:100%;background:#292524;z-index:1000;transform:translateX(100%);transition:transform .28s ease-in-out;box-shadow:-5px 0 20px rgba(0,0,0,.45);display:flex;flex-direction:column;padding-top:4rem}
     #mobile-menu-overlay.open{transform:translateX(0)}
     #mobile-menu-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;display:none}
     #mobile-menu-backdrop.open{display:block}
     body.no-scroll{overflow:hidden}
+
+    /* Print toolbar */
     .print-toolbar{position:fixed;right:16px;bottom:16px;z-index:60}
     .print-toolbar button{box-shadow:0 6px 18px rgba(0,0,0,.35)}
-    .no-print{display:block}
-    .print-only{display:none}
+
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    @media (prefers-reduced-motion: reduce) {* { animation: none !important; transition: none !important; scroll-behavior: auto !important; }}
+
+    /* Reduce motion respect */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+
+    /* Print styles */
     @media print {
       html,body{background:#fff !important;color:#000 !important}
       .bg-stone-800,.bg-stone-900,.bg-stone-700{background:#fff !important}
@@ -74,20 +91,26 @@
       .no-print,header,.print-toolbar,#mobile-menu-overlay,#mobile-menu-backdrop{display:none !important}
       main.container,.container{max-width:100% !important;padding:0 12mm !important}
       a[href]:after{content:'' !important}
+
+      /* Limited print (checklists + calendar) */
       body.print-limited section:not(#next-actions):not(#milestones){display:none !important;}
       #next-actions, #milestones { page-break-inside: avoid; }
     }
   </style>
 </head>
+
 <body class="antialiased">
   <a href="#intro" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:bg-sky-600 focus:text-white focus:px-3 focus:py-2 focus:rounded">Skip to content</a>
+
   <div id="page-wrapper">
+    <!-- Header -->
     <header class="bg-stone-800/90 backdrop-blur-lg sticky top-0 z-50 shadow-sm no-print">
       <nav class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-center mb-3">
           <span class="text-4xl mr-3" role="img" aria-label="Tennis Ball">🎾</span>
           <h1 id="site-title" class="text-2xl md:text-3xl font-bold">College Tennis Roadmap</h1>
         </div>
+
         <div class="hidden md:flex items-center justify-center flex-wrap gap-x-6 gap-y-2" role="navigation" aria-label="Main navigation">
           <a href="#vision" class="nav-link text-stone-300 hover:text-sky-400 font-medium pb-1">The Vision</a>
           <a href="#metrics" class="nav-link text-stone-300 hover:text-sky-400 font-medium pb-1">The Metrics</a>
@@ -101,6 +124,7 @@
           <a href="#resources" class="nav-link text-stone-300 hover:text-sky-400 font-medium pb-1">Resources</a>
           <a href="#finances" class="nav-link text-stone-300 hover:text-sky-400 font-medium pb-1">The Finances</a>
         </div>
+
         <div class="md:hidden flex justify-end">
           <button id="mobile-menu-button" class="text-stone-300 hover:text-sky-400 focus:outline-none" aria-controls="mobile-menu-overlay" aria-expanded="false" aria-label="Open menu">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -110,18 +134,23 @@
         </div>
       </nav>
     </header>
+
+    <!-- Print buttons -->
     <div class="print-toolbar no-print">
       <div class="flex flex-col gap-2">
         <button id="btn-print-all" class="bg-sky-600 hover:bg-sky-500 text-white px-4 py-2 rounded">Print Page (PDF)</button>
         <button id="btn-print-cc" class="bg-stone-700 hover:bg-stone-600 text-white px-4 py-2 rounded">Print Checklists + Calendar</button>
       </div>
     </div>
+
     <main class="container mx-auto p-4 md:p-8">
+      <!-- INTRO + GENERATOR -->
       <section id="intro" class="text-center mb-16">
-        <h2 class="text-4xl md:text-5xl font-extrabold mb-4" id="intro-title">The Pathway to Collegiate Tennis</h2>
+        <h2 id="intro-title" class="text-4xl md:text-5xl font-extrabold mb-4">The Pathway to Collegiate Tennis</h2>
         <p class="max-w-3xl mx-auto text-lg text-stone-300">
           A comprehensive, year-by-year guide to prepare a junior player for college tennis — athletic development, academics, and recruitment strategy.
         </p>
+
         <div class="mt-6 max-w-4xl mx-auto bg-stone-800/70 rounded-xl p-4 md:p-5 shadow-md">
           <form id="profile-form" class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
             <div class="md:col-span-4 text-left">
@@ -145,10 +174,13 @@
             <button id="btn-reset" class="ml-2 text-rose-400 hover:underline">Reset Roadmap</button>
           </div>
         </div>
+
+        <!-- Audio / Video buttons -->
         <div class="mt-6 flex justify-center gap-3 flex-wrap">
           <a href="https://notebooklm.google.com/notebook/f0928cba-97fe-4e44-b4e9-c3f13487c05d?artifactId=f9435131-3e34-4746-8934-9ac3b2a2577e" target="_blank" rel="noopener" title="An audio summary of this college tennis roadmap" class="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white px-5 py-2 rounded-lg shadow transition">🎧 <span>Listen to Audio Overview</span></a>
           <a href="https://notebooklm.google.com/notebook/f0928cba-97fe-4e44-b4e9-c3f13487c05d?artifactId=362827e4-517e-4cbd-a3ed-f5ea2f476f5e" target="_blank" rel="noopener" title="Watch a visual walkthrough of this roadmap" class="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-400 text-white px-5 py-2 rounded-lg shadow transition">🎥 <span>Watch Video Overview</span></a>
         </div>
+
         <div class="mt-8 flex justify-center items-center space-x-8">
           <div class="text-center">
             <p id="john-age" class="text-3xl font-bold text-sky-400">—</p>
@@ -160,16 +192,785 @@
           </div>
         </div>
       </section>
-      <!-- (Rest of the document unchanged from the last working version; omitted for brevity in this creation block) -->
-      <!-- NOTE: The only change requested was updating the two NotebookLM links above. -->
+
+      <!-- VISION (Accordion) -->
+      <section id="vision" class="mb-16 scroll-mt-20">
+        <h3 class="text-3xl font-bold text-center mb-2">The Vision: What Coaches Look For</h3>
+        <p class="text-center text-stone-300 mb-8 max-w-2xl mx-auto">College coaches seek well-rounded student-athletes. Success goes beyond rankings to include academics, character, and demonstrated potential.</p>
+
+        <div class="max-w-3xl mx-auto space-y-4">
+          <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
+            <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg">
+              <span>Athletic Ability & Potential</span><span class="acc-icon transform transition-transform">▼</span>
+            </button>
+            <div class="accordion-content">
+              <div class="p-5 pt-0 text-stone-300">
+                <ul class="list-disc list-inside space-y-2">
+                  <li><strong>UTR & Rankings:</strong> UTR + TRN star rating are key filters.</li>
+                  <li><strong>Performance:</strong> Consistency at USTA L6–L3 and verified UTR events.</li>
+                  <li><strong>Skills:</strong> Solid fundamentals, variety, controlled pace.</li>
+                  <li><strong>Physicality:</strong> Strength, endurance, court speed.</li>
+                  <li><strong>Growth:</strong> Clear work ethic and trajectory.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
+            <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg">
+              <span>Academic Excellence</span><span class="acc-icon transform transition-transform">▼</span>
+            </button>
+            <div class="accordion-content">
+              <div class="p-5 pt-0 text-stone-300">
+                <ul class="list-disc list-inside space-y-2">
+                  <li><strong>GPA & Rigor:</strong> High grades in challenging courses (AP/IB).</li>
+                  <li><strong>Testing:</strong> SAT/ACT (where applicable) + strong writing.</li>
+                  <li><strong>Eligibility:</strong> NCAA/NAIA core-course compliance.</li>
+                  <li><strong>Habits:</strong> Time management + study discipline.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
+            <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg">
+              <span>Character & Intangibles</span><span class="acc-icon transform transition-transform">▼</span>
+            </button>
+            <div class="accordion-content">
+              <div class="p-5 pt-0 text-stone-300">
+                <ul class="list-disc list-inside space-y-2">
+                  <li><strong>Mental Toughness:</strong> Pressure handling and resilience.</li>
+                  <li><strong>Coachability:</strong> Open to feedback; team-first mindset.</li>
+                  <li><strong>Work Ethic:</strong> Consistency in training and review.</li>
+                  <li><strong>Professionalism:</strong> Respectful communication.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NEXT ACTIONS -->
+      <section id="next-actions" class="mb-16 scroll-mt-20">
+        <h3 class="text-3xl font-bold text-center mb-2">Next Actions (This Month)</h3>
+        <p class="text-center text-stone-300 mb-8 max-w-2xl mx-auto">Age-aware quick wins to keep momentum. These update automatically from Date of Birth.</p>
+        <div class="max-w-3xl mx-auto bg-stone-800 p-6 rounded-lg shadow-md">
+          <ul id="next-actions-list" class="list-disc list-inside space-y-2 text-stone-300"></ul>
+          <p id="next-actions-hint" class="text-xs text-stone-400 mt-4"></p>
+        </div>
+      </section>
+
+      <!-- METRICS (Chart + Table) -->
+      <section id="metrics" class="mb-16 scroll-mt-20">
+        <h3 class="text-3xl font-bold text-center mb-2">The Metrics: UTR Targets by Year</h3>
+        <p class="text-center text-stone-300 mb-8 max-w-2xl mx-auto">Targets are shown as a shaded range. The midpoint line is a helpful guide.</p>
+
+        <div class="bg-stone-800 p-4 md:p-8 rounded-xl shadow-lg">
+          <div class="chart-container">
+            <canvas id="utrChart" role="img" aria-label="UTR progression chart"></canvas>
+          </div>
+          <div id="chart-fallback" class="mt-4 text-stone-300 text-sm hidden">
+            <div class="bg-stone-900 rounded p-4">
+              <p class="mb-2"><strong>Chart unavailable.</strong> Target UTR range by year:</p>
+              <ul class="list-disc list-inside space-y-1">
+                <li id="fb-fresh"></li>
+                <li id="fb-soph"></li>
+                <li id="fb-junior"></li>
+                <li id="fb-senior"></li>
+              </ul>
+              <button id="btn-reload-chart" class="mt-3 bg-sky-600 hover:bg-sky-500 text-white px-4 py-2 rounded no-print">Reload Chart</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 overflow-x-auto">
+          <table class="min-w-full bg-stone-800 rounded-lg shadow-md">
+            <thead class="bg-stone-700">
+              <tr>
+                <th class="p-4 text-left font-semibold">NCAA Division / Association</th>
+                <th class="p-4 text-center font-semibold">Target UTR (Age 17)</th>
+                <th class="p-4 text-center font-semibold">TennisRecruiting.net Star Rating</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-stone-700">
+                <td class="p-4 text-stone-300">Tier 1 (Top NCAA D1)</td>
+                <td class="p-4 text-center font-mono text-stone-300">12.5+</td>
+                <td class="p-4 text-center text-stone-300">5-Star / Blue Chip</td>
+              </tr>
+              <tr class="border-b border-stone-700">
+                <td class="p-4 text-stone-300">Tier 2 (Lower D1 / Top D2 & NAIA)</td>
+                <td class="p-4 text-center font-mono text-stone-300">11.5+</td>
+                <td class="p-4 text-center text-stone-300">4-Star+</td>
+              </tr>
+              <tr class="border-b border-stone-700">
+                <td class="p-4 text-stone-300">Tier 3 (Lower NCAA D2)</td>
+                <td class="p-4 text-center font-mono text-stone-300">9.5+</td>
+                <td class="p-4 text-center text-stone-300">2-Star+ / 3-Star</td>
+              </tr>
+              <tr>
+                <td class="p-4 text-stone-300">Tier 4 (NCAA D3)</td>
+                <td class="p-4 text-center font-mono text-stone-300">6.0 – 11.0+</td>
+                <td class="p-4 text-center text-stone-300">1-Star+</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PATHWAY (Timeline) -->
+      <section id="pathway" class="mb-16 scroll-mt-20">
+        <h3 class="text-3xl font-bold text-center mb-8">The Pathway: Year-by-Year Progression</h3>
+
+        <div class="relative wrap overflow-hidden p-4 md:p-10">
+          <div class="timeline-line absolute border-opacity-20 border-stone-600 h-full border" style="left:50%"></div>
+
+          <!-- Freshman -->
+          <div id="freshman" class="mb-8 flex justify-between items-center w-full right-timeline">
+            <div class="order-1 w-5/12 md:block hidden"></div>
+            <div class="z-20 flex items-center order-1 bg-sky-500 shadow-xl w-12 h-12 rounded-full" aria-hidden="true">
+              <h2 id="fresh-circle" class="mx-auto font-bold text-lg text-white">--</h2>
+            </div>
+            <div class="order-1 bg-stone-800 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4">
+              <h4 id="fresh-title" class="font-bold text-lg mb-2">Age -- (Freshman)</h4>
+              <p class="text-sm text-stone-300"><strong>Focus:</strong> Foundational development.</p>
+              <ul class="list-disc list-inside text-sm mt-2 space-y-1">
+                <li id="fresh-utr" class="text-stone-300"><strong>UTR Target:</strong> —</li>
+                <li><strong>Tennis:</strong> Consistency, serve development, mental toughness basics.</li>
+                <li><strong>Tournaments:</strong> USTA L7 & L6.</li>
+                <li><strong>Academics:</strong> Strong GPA; understand NCAA core courses.</li>
+                <li><strong>Recruitment:</strong> Create TRN profile; build preliminary list.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Sophomore -->
+          <div id="sophomore" class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
+            <div class="order-1 w-5/12 md:block hidden"></div>
+            <div class="z-20 flex items-center order-1 bg-sky-500 shadow-xl w-12 h-12 rounded-full" aria-hidden="true">
+              <h2 id="soph-circle" class="mx-auto text-white text-lg font-bold">--</h2>
+            </div>
+            <div class="order-1 bg-stone-800 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4">
+              <h4 id="soph-title" class="font-bold text-lg mb-2">Age -- (Sophomore)</h4>
+              <p class="text-sm text-stone-300"><strong>Focus:</strong> Accelerated growth & early exposure.</p>
+              <ul class="list-disc list-inside text-sm mt-2 space-y-1">
+                <li id="soph-utr" class="text-stone-300"><strong>UTR Target:</strong> —</li>
+                <li><strong>Tennis:</strong> Tactical growth, analysis, conditioning.</li>
+                <li><strong>Tournaments:</strong> USTA L6 & L5; UTR-verified events.</li>
+                <li><strong>Academics:</strong> Maintain GPA; begin SAT/ACT prep.</li>
+                <li><strong>Recruitment:</strong> Build highlight video; coach contact opens Jun 15.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Junior -->
+          <div id="junior" class="mb-8 flex justify-between items-center w-full right-timeline">
+            <div class="order-1 w-5/12 md:block hidden"></div>
+            <div class="z-20 flex items-center order-1 bg-sky-500 shadow-xl w-12 h-12 rounded-full" aria-hidden="true">
+              <h2 id="junior-circle" class="mx-auto font-bold text-lg text-white">--</h2>
+            </div>
+            <div class="order-1 bg-stone-800 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4">
+              <h4 id="junior-title" class="font-bold text-lg mb-2">Age -- (Junior)</h4>
+              <p class="text-sm text-stone-300"><strong>Focus:</strong> Intensified recruitment & high-level competition.</p>
+              <ul class="list-disc list-inside text-sm mt-2 space-y-1">
+                <li id="junior-utr" class="text-stone-300"><strong>UTR Target:</strong> —</li>
+                <li><strong>Tennis:</strong> Perform consistently under pressure.</li>
+                <li><strong>Tournaments:</strong> USTA L5, L4 & L3.</li>
+                <li><strong>Academics:</strong> SAT/ACT; core courses on track.</li>
+                <li><strong>Recruitment:</strong> Coach outreach; visits.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Senior -->
+          <div id="senior" class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
+            <div class="order-1 w-5/12 md:block hidden"></div>
+            <div class="z-20 flex items-center order-1 bg-sky-500 shadow-xl w-12 h-12 rounded-full" aria-hidden="true">
+              <h2 id="senior-circle" class="mx-auto text-white text-lg font-bold">--</h2>
+            </div>
+            <div class="order-1 bg-stone-800 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4">
+              <h4 id="senior-title" class="font-bold text-lg mb-2">Age -- (Senior)</h4>
+              <p class="text-sm text-stone-300"><strong>Focus:</strong> Decision & commitment.</p>
+              <ul class="list-disc list-inside text-sm mt-2 space-y-1">
+                <li id="senior-utr" class="text-stone-300"><strong>UTR Target:</strong> —</li>
+                <li><strong>Tennis:</strong> Peak performance in high-stakes tournaments.</li>
+                <li><strong>Academics:</strong> Finalize grades/tests; ensure eligibility.</li>
+                <li><strong>Recruitment:</strong> Applications; NLI if offered; walk-on options.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MILESTONES -->
+      <section id="milestones" class="mb-16 scroll-mt-20">
+        <h3 class="text-3xl font-bold text-center mb-2">Recruitment and Eligibility Milestones</h3>
+        <p class="text-center text-stone-300 mb-8 max-w-2xl mx-auto">When to engage with key organizations and eligibility rules.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="bg-stone-800 p-6 rounded-lg shadow-md">
+            <h4 class="font-bold text-xl mb-2">NCAA Eligibility Center</h4>
+            <p class="text-stone-300 mb-4">Verifies academic and amateur status. Mandatory for D1 & D2.</p>
+            <ul class="list-disc list-inside text-stone-300 space-y-2">
+              <li><strong>Why:</strong> Required for recruitment/scholarships.</li>
+              <li><strong>When:</strong>
+                <ul class="list-disc list-inside ml-4 mt-1">
+                  <li><strong>Age 14:</strong> Understand core courses; plan curriculum.</li>
+                  <li><strong>Age 15–16:</strong> Register; send SAT/ACT scores if needed.</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-stone-800 p-6 rounded-lg shadow-md">
+            <h4 class="font-bold text-xl mb-2">NAIA Eligibility Center</h4>
+            <p class="text-stone-300 mb-4">Determines eligibility for NAIA schools.</p>
+            <ul class="list-disc list-inside text-stone-300 space-y-2">
+              <li><strong>Why:</strong> Ensures academic standards for NAIA.</li>
+              <li><strong>When:</strong>
+                <ul class="list-disc list-inside ml-4 mt-1">
+                  <li><strong>Age 15–16:</strong> Register and handle test scores.</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-stone-800 p-6 rounded-lg shadow-md">
+            <h4 class="font-bold text-xl mb-2">UTR Sports & TennisRecruiting.net</h4>
+            <p class="text-stone-300 mb-4">Core platforms for objective data and coach visibility.</p>
+            <ul class="list-disc list-inside text-stone-300 space-y-2">
+              <li><strong>Why:</strong> Coaches compare players using UTR and TRN.</li>
+              <li><strong>When:</strong>
+                <ul class="list-disc list-inside ml-4 mt-1">
+                  <li><strong>Age 13–14:</strong> Create profiles; play UTR-verified events.</li>
+                  <li><strong>Ongoing:</strong> Update results, academics, highlights.</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- STRATEGY -->
+      <section id="strategy" class="mb-16 scroll-mt-20">
+        <h3 class="text-3xl font-bold text-center mb-2">Match Strategy Examples</h3>
+        <div class="bg-stone-800 p-6 rounded-lg shadow-md max-w-2xl mx-auto space-y-6">
+          <div>
+            <h4 class="font-bold text-xl mb-2">Against a Higher-Rated Opponent</h4>
+            <p class="text-stone-300"><strong>Tactical:</strong> Consistency + force errors. <strong>Mental:</strong> Patient & steady. <strong>Shots:</strong> Heavy topspin, slice to break rhythm, attack short balls.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-xl mb-2">Against a Lower-Rated Opponent</h4>
+            <p class="text-stone-300"><strong>Tactical:</strong> Dictate pace; mix in drop/lob. <strong>Mental:</strong> Focused, low errors. <strong>Shots:</strong> Deep/aggressive; serve to gain advantage.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-xl mb-2">Against a Similar-Rated Opponent</h4>
+            <p class="text-stone-300"><strong>Tactical:</strong> Consistency + variety. <strong>Mental:</strong> Composed in big points. <strong>Shots:</strong> Use strengths; press on short balls.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECRUITMENT EMAIL -->
+      <section id="recruitment-email" class="mb-16 scroll-mt-20">
+        <h3 class="text-3xl font-bold text-center mb-2">Recruitment Email Template</h3>
+        <div class="bg-stone-800 p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+          <div class="relative">
+            <button id="copy-email" class="absolute right-2 top-2 bg-sky-500 hover:bg-sky-400 text-white px-3 py-1 rounded no-print">Copy</button>
+            <div id="email-template" class="text-stone-300 whitespace-pre-wrap font-mono text-sm">
+Subject: [Your Name] - [Your UTR] UTR - [High School Graduation Year] Recruit
+
+Dear Coach [Coach's Last Name],
+
+My name is [Your Name], and I am a [High School Graduation Year] from [City, State]. I am writing to express interest in your [College Division] program at [College Name]. I believe my [Your Key Strengths] would be a strong fit for your team.
+
+I am currently a [Your Class] at [Your High School] with a [Your GPA] GPA, and a UTR of [Your UTR]. My academic plan is to major in [Your Intended Major].
+
+I have attached my athletic resume and highlight video for your review. I will be competing in the [Upcoming Tournament Name] on [Date] if you are available to observe.
+
+Thank you for your time and consideration.
+
+Sincerely,
+[Your Name]
+[Your Phone Number]
+[Your Email Address]
+[Link to UTR profile]
+[Link to TennisRecruiting.net profile]
+[Link to highlight video]
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SWOT -->
+      <section id="swot-analysis" class="mb-16 scroll-mt-20">
+        <h3 class="text-3xl font-bold text-center mb-2">Example SWOT Analysis</h3>
+        <div class="bg-stone-800 p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+          <h4 class="font-bold text-xl mb-2">Strengths</h4>
+          <ul class="list-disc list-inside text-stone-300 mb-4 space-y-1">
+            <li>Excellent work ethic & consistency.</li>
+            <li>Coachability and willingness to learn.</li>
+            <li>Improving directional control.</li>
+            <li>Solid defensive instincts; rally consistency.</li>
+            <li>Growing confidence at net.</li>
+          </ul>
+          <h4 class="font-bold text-xl mb-2">Weaknesses</h4>
+          <ul class="list-disc list-inside text-stone-300 mb-4 space-y-1">
+            <li>Inconsistent closing vs. similar UTRs.</li>
+            <li>Control under pressure (errors long).</li>
+            <li>Mindset dips after lost points.</li>
+            <li>Serve needs power/placement.</li>
+          </ul>
+          <h4 class="font-bold text-xl mb-2">Opportunities</h4>
+          <ul class="list-disc list-inside text-stone-300 mb-4 space-y-1">
+            <li>Doubles development: steady partner + targeted events.</li>
+            <li>Mental training: routines for pressure moments.</li>
+            <li>Coaching collaboration: quarterly goals + video review.</li>
+            <li>Match volume: smart UTR & USTA event mix.</li>
+          </ul>
+          <h4 class="font-bold text-xl mb-2">Threats</h4>
+          <ul class="list-disc list-inside text-stone-300 space-y-1">
+            <li>Progress plateau if core gaps persist.</li>
+            <li>Confidence spiral from poor results.</li>
+            <li>Injury risk from mechanics under load.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- GLOSSARY -->
+      <section id="glossary" class="mb-16 scroll-mt-20">
+        <h3 class="text-3xl font-bold text-center mb-2">Glossary (Quick Reference)</h3>
+        <p class="text-center text-stone-300 mb-8 max-w-2xl mx-auto">Short definitions parents will see along the way.</p>
+        <div class="max-w-3xl mx-auto space-y-4">
+          <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
+            <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg">
+              <span>UTR (Universal Tennis Rating)</span><span class="acc-icon transform transition-transform">▼</span>
+            </button>
+            <div class="accordion-content">
+              <div class="p-5 pt-0 text-stone-300">
+                A global 1–16 scale that compares players across age and geography. Coaches use it as an objective baseline of strength.
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
+            <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg">
+              <span>TRN (TennisRecruiting.net)</span><span class="acc-icon transform transition-transform">▼</span>
+            </button>
+            <div class="accordion-content">
+              <div class="p-5 pt-0 text-stone-300">
+                A recruiting database with rankings and profiles. Many college coaches search TRN for prospects and star ratings.
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
+            <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg">
+              <span>NCAA Eligibility Center</span><span class="acc-icon transform transition-transform">▼</span>
+            </button>
+            <div class="accordion-content">
+              <div class="p-5 pt-0 text-stone-300">
+                The portal that certifies academic and amateur status for D1/D2 recruits. Registration is required before athletic aid/official offers.
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item bg-stone-800 rounded-lg shadow-md">
+            <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold text-lg">
+              <span>NLI (National Letter of Intent)</span><span class="acc-icon transform transition-transform">▼</span>
+            </button>
+            <div class="accordion-content">
+              <div class="p-5 pt-0 text-stone-300">
+                A binding agreement to attend a school in exchange for athletic aid (not used by all divisions).
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESOURCES -->
+      <section id="resources" class="mb-16 scroll-mt-20">
+        <h3 class="text-3xl font-bold text-center mb-8">Resources and Links</h3>
+        <div class="bg-stone-800 p-6 rounded-lg shadow-md max-w-3xl mx-auto">
+          <ul class="list-disc list-inside space-y-2 text-stone-300">
+            <li><a href="https://web3.ncaa.org/ecwr3/" target="_blank" rel="noopener" class="text-sky-400 hover:text-sky-500 underline">NCAA Eligibility Center</a></li>
+            <li><a href="https://play.naia.org/" target="_blank" rel="noopener" class="text-sky-400 hover:text-sky-500 underline">NAIA Eligibility Center</a></li>
+            <li><a href="https://app.universaltennis.com/" target="_blank" rel="noopener" class="text-sky-400 hover:text-sky-500 underline">UTR Sports</a></li>
+            <li><a href="https://www.tennisrecruiting.net/" target="_blank" rel="noopener" class="text-sky-400 hover:text-sky-500 underline">TennisRecruiting.net</a></li>
+            <li><a href="https://www.ustafoundation.com/" target="_blank" rel="noopener" class="text-sky-400 hover:text-sky-500 underline">USTA Foundation</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- FINANCES -->
+      <section id="finances" class="mb-16 scroll-mt-20">
+        <h3 class="text-3xl font-bold text-center mb-8">The Finances: Scholarship Opportunities</h3>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="bg-stone-800 p-6 rounded-lg shadow-md">
+            <h4 class="font-bold text-xl mb-2">Athletic Scholarships</h4>
+            <p class="text-stone-300">Available in D1, D2, NAIA, and JUCO. Full rides are rare; partial awards common.</p>
+          </div>
+          <div class="bg-stone-800 p-6 rounded-lg shadow-md">
+            <h4 class="font-bold text-xl mb-2">Academic & Merit Aid</h4>
+            <p class="text-stone-300">Available across divisions. Essential for D3 (no athletic scholarships).</p>
+          </div>
+          <div class="bg-stone-800 p-6 rounded-lg shadow-md">
+            <h4 class="font-bold text-xl mb-2">Need-Based & External</h4>
+            <p class="text-stone-300">FAFSA + outside grants (e.g., USTA Foundation, local orgs).</p>
+          </div>
+        </div>
+      </section>
     </main>
+
+    <!-- FOOTER -->
     <footer class="bg-stone-900 text-white mt-16 no-print">
       <div class="container mx-auto p-8 text-center text-sm">
         <p class="mb-1 text-stone-400">&copy; 2025 College Tennis Roadmap. All rights reserved.</p>
         <p class="mb-1 text-stone-400">Prepared by: <a href="mailto:hlawrence112@gmail.com" class="text-sky-400 hover:underline">hlawrence112@gmail.com</a></p>
+        <p class="text-stone-400">Disclaimer: This roadmap is a guide and does not guarantee outcomes.</p>
       </div>
     </footer>
   </div>
-  <script>/* Keep your existing JS here – not altered for link update */</script>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu-backdrop" class="no-print"></div>
+  <nav id="mobile-menu-overlay" aria-hidden="true" aria-label="Mobile menu" class="no-print">
+    <button id="close-mobile-menu" class="absolute top-4 right-4 text-white hover:text-sky-300 focus:outline-none" aria-label="Close menu">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+    <div class="flex flex-col px-4 space-y-3 pt-6">
+      <a href="#vision" class="mobile-nav-link text-stone-100 text-xl font-medium">The Vision</a>
+      <a href="#metrics" class="mobile-nav-link text-stone-100 text-xl font-medium">The Metrics</a>
+      <a href="#pathway" class="mobile-nav-link text-stone-100 text-xl font-medium">The Pathway</a>
+      <a href="#next-actions" class="mobile-nav-link text-stone-100 text-xl font-medium">Next Actions</a>
+      <a href="#milestones" class="mobile-nav-link text-stone-100 text-xl font-medium">Milestones</a>
+      <a href="#strategy" class="mobile-nav-link text-stone-100 text-xl font-medium">Match Strategy</a>
+      <a href="#recruitment-email" class="mobile-nav-link text-stone-100 text-xl font-medium">Recruitment Email</a>
+      <a href="#swot-analysis" class="mobile-nav-link text-stone-100 text-xl font-medium">SWOT Analysis</a>
+      <a href="#glossary" class="mobile-nav-link text-stone-100 text-xl font-medium">Glossary</a>
+      <a href="#resources" class="mobile-nav-link text-stone-100 text-xl font-medium">Resources</a>
+      <a href="#finances" class="mobile-nav-link text-stone-100 text-xl font-medium">The Finances</a>
+    </div>
+  </nav>
+
+  <!-- App JS -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const DEFAULT_PROFILE = { name: "", fullname: "", dob: "", utr: "" };
+
+      /* Target ranges (kept consistent with timeline + chart) */
+      const TARGETS = {
+        freshman:{min:4.0,max:4.5},
+        sophomore:{min:5.5,max:7.0},
+        junior:{min:8.0,max:10.0},
+        senior:{min:9.5,max:12.5}
+      };
+      const mid = v => (v.min + v.max) / 2;
+
+      /* Quick actions per age */
+      const NEXT_ACTIONS = {
+        13:["Create/complete UTR and TRN profiles with a current photo.","Enter UTR-verified matches; target 2–3 events this quarter.","Weekly serve practice (targets/spin).","Start a 30–60 sec highlight clip (phone is fine)."],
+        14:["Book USTA L6/L5 events for the next 8–10 weeks.","Baseline patterns: cross-court heavy topspin + add slice variation.","Light SAT/ACT exposure (10–15 min/day).","Log match notes after events (3 strengths, 1 focus)."],
+        15:["Assemble a 90-sec highlight video.","Create a college list (10–15 schools, D1/D2/D3).","Strength & conditioning 2–3×/week.","Plan one campus visit (unofficial)."],
+        16:["Email 5–8 coaches monthly with results + events.","Register NCAA/NAIA eligibility centers and send scores.","Play one higher-level draw (L4/L3 or UTR showcase).","Schedule 1–2 coach calls; prepare questions."],
+        17:["Confirm core courses & GPA for eligibility.","Narrow college list (5–7); schedule visits.","Update video with recent clips.","Prep for NLI timing and scholarship talks."]
+      };
+
+      /* Utils */
+      function calculateAge(dobStr, atDate=new Date()){
+        if(!dobStr) return null;
+        const birth = new Date(dobStr);
+        if (isNaN(birth)) return null;
+        let age = atDate.getFullYear() - birth.getFullYear();
+        const m = atDate.getMonth() - birth.getMonth();
+        if (m < 0 || (m === 0 && atDate.getDate() < birth.getDate())) age--;
+        return age;
+      }
+      function getQueryParams(){
+        const p = new URLSearchParams(window.location.search);
+        return { name: p.get("name")||"", dob: p.get("dob")||"", utr: p.get("utr")||"" };
+      }
+      function saveProfile(p){ try{ localStorage.setItem("roadmapProfile", JSON.stringify(p)); }catch(e){} }
+      function loadProfile(){ try{ const r=localStorage.getItem("roadmapProfile"); return r?JSON.parse(r):null; } catch(e){ return null; } }
+
+      /* Applyers */
+      function applyTitle(name){
+        document.getElementById("site-title").textContent = name ? `${name}'s College Tennis Roadmap` : "College Tennis Roadmap";
+      }
+      function applyAgeAndUtr(dob, utrVal){
+        const age = calculateAge(dob);
+        document.getElementById("john-age").textContent = (age ?? "—");
+        document.getElementById("current-utr").textContent = (utrVal && !Number.isNaN(Number(utrVal))) ? String(utrVal) : "3.xx";
+        return age;
+      }
+      function setNextActions(age){
+        const list = document.getElementById("next-actions-list");
+        const hint = document.getElementById("next-actions-hint");
+        if (age == null){ list.innerHTML = ""; hint.textContent = "Enter a valid date of birth to generate age-specific action items."; return; }
+        hint.textContent = "Tip: Review with the coaching team to align training and competition calendars.";
+        const items = NEXT_ACTIONS[age] || NEXT_ACTIONS[Math.max(13, Math.min(17, age))] || [];
+        list.innerHTML = items.map(x => `<li>${x}</li>`).join("");
+      }
+      function setTimeline(age){
+        const setText = (id, t) => document.getElementById(id).textContent = t;
+        const setHTML = (id, h) => document.getElementById(id).innerHTML = h;
+
+        if (age == null){
+          setText("fresh-circle","--"); setText("soph-circle","--"); setText("junior-circle","--"); setText("senior-circle","--");
+          setText("fresh-title","Age -- (Freshman)"); setText("soph-title","Age -- (Sophomore)");
+          setText("junior-title","Age -- (Junior)"); setText("senior-title","Age -- (Senior)");
+        } else {
+          const A = { fr: age, so: age+1, jr: age+2, sr: age+3 };
+          const rng = a => `${a}–${a+1}`;
+          setText("fresh-circle",A.fr); setText("soph-circle",A.so); setText("junior-circle",A.jr); setText("senior-circle",A.sr);
+          setText("fresh-title",`Age ${rng(A.fr)} (Freshman)`); setText("soph-title",`Age ${rng(A.so)} (Sophomore)`);
+          setText("junior-title",`Age ${rng(A.jr)} (Junior)`); setText("senior-title",`Age ${rng(A.sr)} (Senior)`);
+        }
+        setHTML("fresh-utr", `<strong>UTR Target:</strong> ${TARGETS.freshman.min.toFixed(1)} – ${TARGETS.freshman.max.toFixed(1)}`);
+        setHTML("soph-utr",  `<strong>UTR Target:</strong> ${TARGETS.sophomore.min.toFixed(1)} – ${TARGETS.sophomore.max.toFixed(1)}`);
+        setHTML("junior-utr", `<strong>UTR Target:</strong> ${TARGETS.junior.min.toFixed(1)} – ${TARGETS.junior.max.toFixed(1)}`);
+        setHTML("senior-utr", `<strong>UTR Target:</strong> ${TARGETS.senior.min.toFixed(1)} – ${TARGETS.senior.max.toFixed(1)}`);
+      }
+
+      /* Chart */
+      let chartInited = false;
+      window.renderChart = function(age){
+        const canvas = document.getElementById("utrChart");
+        if (!(canvas && window.Chart)) return false;
+        if (age == null){ showChartFallback(); return false; }
+
+        try{
+          const labels = [
+            `Age ${age} (Start)`,
+            `Age ${age+1} (End Freshman)`,
+            `Age ${age+2} (End Sophomore)`,
+            `Age ${age+3} (End Junior)`,
+            `Age ${age+4} (End Senior)`
+          ];
+          const baseline = 3.0;
+          const minBand = [baseline, TARGETS.freshman.min, TARGETS.sophomore.min, TARGETS.junior.min, TARGETS.senior.min];
+          const maxBand = [baseline, TARGETS.freshman.max, TARGETS.sophomore.max, TARGETS.junior.max, TARGETS.senior.max];
+          const midLine = [baseline, mid(TARGETS.freshman), mid(TARGETS.sophomore), mid(TARGETS.junior), mid(TARGETS.senior)];
+
+          if (chartInited && canvas._chart) canvas._chart.destroy();
+
+          const ctx = canvas.getContext("2d");
+          const chart = new Chart(ctx, {
+            type: "line",
+            data: { labels, datasets: [
+              { label:"Target Range (min)", data:minBand, borderColor:"rgba(56,189,248,0)", backgroundColor:"rgba(56,189,248,0.15)", pointRadius:0, fill:"+1" },
+              { label:"Target Range (max)", data:maxBand, borderColor:"rgba(56,189,248,0)", backgroundColor:"rgba(56,189,248,0.15)", pointRadius:0, fill:false },
+              { label:"Player Target (midpoint)", data:midLine, borderColor:"#38BDF8", backgroundColor:"rgba(56,189,248,0.25)", tension:0.35, pointRadius:5, pointBackgroundColor:"#38BDF8", fill:false },
+              { label:"NCAA D3 Minimum", data:[6,6,6,6,6], borderColor:"rgba(52,211,153,0.6)", borderDash:[5,5], pointRadius:0, fill:false },
+              { label:"NCAA D2 Target", data:[9.5,9.5,9.5,9.5,9.5], borderColor:"rgba(251,191,36,0.7)", borderDash:[5,5], pointRadius:0, fill:false },
+              { label:"NCAA D1 Target", data:[12.5,12.5,12.5,12.5,12.5], borderColor:"rgba(251,113,133,0.7)", borderDash:[5,5], pointRadius:0, fill:false }
+            ]},
+            options: {
+              responsive:true, maintainAspectRatio:false,
+              scales:{
+                y:{ beginAtZero:true, title:{display:true,text:"Universal Tennis Rating (UTR)",color:"#F5F5F4"}, ticks:{color:"#F5F5F4"}, grid:{color:"rgba(255,255,255,0.08)"} },
+                x:{ title:{display:true,text:"Age / High School Year",color:"#F5F5F4"}, ticks:{color:"#F5F5F4"}, grid:{color:"rgba(255,255,255,0.04)"} }
+              },
+              plugins:{
+                legend:{ labels:{ color:"#F5F5F4" } },
+                tooltip:{ titleColor:"#1C1917", bodyColor:"#1C1917", backgroundColor:"#F5F5F4",
+                  callbacks:{ label:(ctx)=>`${ctx.dataset.label}: ${Number.isFinite(ctx.parsed.y)?ctx.parsed.y.toFixed(1):ctx.parsed.y}` } }
+              }
+            }
+          });
+          canvas._chart = chart;
+          chartInited = true;
+          document.getElementById("chart-fallback")?.classList.add("hidden");
+          return true;
+        }catch(e){ console.warn("Chart render failed:", e); return false; }
+      };
+
+      function showChartFallback(){
+        const el = document.getElementById("chart-fallback"); if (!el) return;
+        el.classList.remove("hidden");
+        const fmt = (mn,mx)=>`${mn.toFixed(1)} – ${mx.toFixed(1)}`;
+        document.getElementById("fb-fresh").textContent  = `End Freshman: ${fmt(TARGETS.freshman.min,TARGETS.freshman.max)}`;
+        document.getElementById("fb-soph").textContent   = `End Sophomore: ${fmt(TARGETS.sophomore.min,TARGETS.sophomore.max)}`;
+        document.getElementById("fb-junior").textContent = `End Junior: ${fmt(TARGETS.junior.min,TARGETS.junior.max)}`;
+        document.getElementById("fb-senior").textContent = `End Senior: ${fmt(TARGETS.senior.min,TARGETS.senior.max)}`;
+      }
+
+      /* Apply a profile to the page */
+      function applyProfile(profile){
+        const name = (profile.name||"").trim();
+        const fullname = (profile.fullname || profile.name || "").trim();
+        const dob = profile.dob || "";
+        const utr = profile.utr || "";
+
+        // Title
+        applyTitle(name);
+        const intro = document.getElementById("intro-title");
+        intro.textContent = name ? `The Pathway to Collegiate Tennis for ${fullname}` : "The Pathway to Collegiate Tennis";
+
+        const ageNow = applyAgeAndUtr(dob, utr);
+        setNextActions(ageNow);
+        setTimeline(ageNow);
+
+        if (!window.Chart) showChartFallback();
+        else window.renderChart(ageNow);
+      }
+      function fillForm(profile){
+        document.getElementById("inp-name").value = profile.fullname || profile.name || "";
+        document.getElementById("inp-dob").value = profile.dob || "";
+        document.getElementById("inp-utr").value = profile.utr || "";
+      }
+
+      /* Init profile: URL > localStorage > default */
+      (function initProfile(){
+        const url = getQueryParams();
+        let profile;
+        if (url.name || url.dob || url.utr){
+          profile = { name:(url.name||"").split(" ")[0]||"", fullname:url.name||"", dob:url.dob||"", utr:url.utr||"" };
+          saveProfile(profile);
+        } else {
+          const saved = loadProfile();
+          profile = saved ? { ...saved } : { ...DEFAULT_PROFILE };
+        }
+        fillForm(profile);
+        applyProfile(profile);
+      })();
+
+      /* Generate / Reset */
+      document.getElementById("profile-form").addEventListener("submit",(e)=>{
+        e.preventDefault();
+        const fullname = document.getElementById("inp-name").value.trim();
+        const dob = document.getElementById("inp-dob").value.trim();
+        const utr = document.getElementById("inp-utr").value.trim();
+        const dobValid = /^\d{4}-\d{2}-\d{2}$/.test(dob) && !isNaN(new Date(dob).getTime()) && new Date(dob) <= new Date();
+        if (!fullname || !dobValid){ alert("Please enter a valid Name and DOB in YYYY-MM-DD (not in the future)."); return; }
+        const firstName = fullname.split(" ")[0] || fullname;
+        const profile = { name:firstName, fullname, dob, utr };
+        saveProfile(profile);
+        applyProfile(profile);
+
+        // Update URL (shareable)
+        const params = new URLSearchParams(window.location.search);
+        params.set("name", fullname);
+        params.set("dob", dob);
+        if (utr) params.set("utr", utr); else params.delete("utr");
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.replaceState({}, "", newUrl);
+      });
+
+      document.getElementById("btn-reset").addEventListener("click",()=>{
+        try{ localStorage.removeItem("roadmapProfile"); }catch(e){}
+        window.history.replaceState({}, "", window.location.pathname);
+        fillForm(DEFAULT_PROFILE);
+        applyProfile(DEFAULT_PROFILE);
+      });
+
+      /* Chart fallback reload */
+      (function(){
+        const btn = document.getElementById("btn-reload-chart");
+        if (!btn) return;
+        btn.addEventListener("click", async ()=>{
+          const orig = btn.textContent; btn.disabled = true; btn.textContent = "Loading…";
+          try{
+            await window.reloadChartJs();
+            const dob = document.getElementById("inp-dob").value.trim();
+            const age = calculateAge(dob);
+            setTimeout(()=>{
+              const ok = window.renderChart(age);
+              if (!ok) throw new Error("Render failed");
+              btn.disabled = false; btn.textContent = orig;
+              document.getElementById("chart-fallback")?.classList.add("hidden");
+            }, 50);
+          }catch(e){ console.warn(e); btn.disabled = false; btn.textContent = "Retry"; }
+        });
+      })();
+
+      /* Accordions */
+      document.querySelectorAll(".accordion-item").forEach(item=>{
+        const header=item.querySelector(".accordion-header");
+        const content=item.querySelector(".accordion-content");
+        const icon=header.querySelector(".acc-icon");
+        header.addEventListener("click",()=>{
+          const open = header.getAttribute("aria-expanded")==="true";
+          document.querySelectorAll(".accordion-header").forEach(h=>{
+            h.setAttribute("aria-expanded","false");
+            const c=h.parentElement?.querySelector(".accordion-content");
+            if(c){ c.style.maxHeight="0px"; c.classList.remove("open"); }
+            const i=h.querySelector(".acc-icon"); if(i) i.style.transform="rotate(0deg)";
+          });
+          if(!open){
+            header.setAttribute("aria-expanded","true");
+            content.style.maxHeight = content.scrollHeight+"px";
+            content.classList.add("open");
+            if(icon) icon.style.transform="rotate(180deg)";
+          }
+        });
+        header.setAttribute("aria-expanded","false");
+      });
+
+      /* Active nav highlighting + smooth scroll */
+      const navLinks=document.querySelectorAll(".nav-link");
+      const sections=document.querySelectorAll("section[id]");
+      navLinks.forEach(link=>{
+        link.addEventListener("click",(e)=>{
+          e.preventDefault();
+          const id=link.getAttribute("href").substring(1);
+          document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
+        });
+      });
+      let ticking=false;
+      window.addEventListener("scroll",()=>{
+        if(!ticking){
+          window.requestAnimationFrame(()=>{
+            let current="";
+            sections.forEach(sec=>{
+              const top=sec.getBoundingClientRect().top+window.pageYOffset;
+              if(window.pageYOffset>=top-100) current=sec.id;
+            });
+            navLinks.forEach(a=>a.classList.toggle("active",a.getAttribute("href").includes(current)));
+            ticking=false;
+          });
+          ticking=true;
+        }
+      },{passive:true});
+
+      /* Mobile menu */
+      const btn=document.getElementById("mobile-menu-button");
+      const closeBtn=document.getElementById("close-mobile-menu");
+      const overlay=document.getElementById("mobile-menu-overlay");
+      const backdrop=document.getElementById("mobile-menu-backdrop");
+      const wrapper=document.getElementById("page-wrapper");
+      function openMenu(){ overlay.classList.add("open"); backdrop.classList.add("open"); wrapper.classList.add("menu-open"); document.body.classList.add("no-scroll"); btn?.setAttribute("aria-expanded","true"); }
+      function closeMenu(){ overlay.classList.remove("open"); backdrop.classList.remove("open"); wrapper.classList.remove("menu-open"); document.body.classList.remove("no-scroll"); btn?.setAttribute("aria-expanded","false"); }
+      btn?.addEventListener("click",openMenu);
+      closeBtn?.addEventListener("click",closeMenu);
+      backdrop?.addEventListener("click",closeMenu);
+      document.addEventListener("keydown",(e)=>{ if(e.key==="Escape"&&overlay.classList.contains("open")) closeMenu(); });
+      document.querySelectorAll(".mobile-nav-link").forEach(a=>{
+        a.addEventListener("click",(e)=>{
+          e.preventDefault();
+          const id=a.getAttribute("href").substring(1);
+          document.getElementById(id)?.scrollIntoView({behavior:"smooth"});
+          setTimeout(closeMenu,300);
+        });
+      });
+
+      /* Print */
+      (function initPrint() {
+        const btnAll = document.getElementById('btn-print-all');
+        const btnCC  = document.getElementById('btn-print-cc');
+        const openPrint = () => { try { window.focus(); setTimeout(() => window.print(), 0); } catch(e) { console.warn('Print blocked', e); } };
+        btnAll?.addEventListener('click', () => { document.body.classList.remove('print-limited'); openPrint(); });
+        btnCC?.addEventListener('click', () => { document.body.classList.add('print-limited'); openPrint(); setTimeout(() => document.body.classList.remove('print-limited'), 1500); });
+      })();
+
+      /* Copy-to-clipboard for email template */
+      (function initCopy(){
+        const copyBtn=document.getElementById("copy-email");
+        const emailBox=document.getElementById("email-template");
+        copyBtn?.addEventListener("click", async ()=>{
+          try{ await navigator.clipboard.writeText(emailBox.textContent.trim()); copyBtn.textContent="Copied!"; setTimeout(()=>copyBtn.textContent="Copy",1500); }
+          catch(e){ console.error("Copy failed",e); }
+        });
+      })();
+    });
+  </script>
 </body>
 </html>
